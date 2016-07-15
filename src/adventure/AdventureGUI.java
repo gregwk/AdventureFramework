@@ -7,7 +7,7 @@ package adventure;
 
 /**
  *
- * @author gregory
+ * @author alex
  */
 public class AdventureGUI extends javax.swing.JFrame {
 
