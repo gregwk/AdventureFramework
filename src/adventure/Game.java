@@ -43,5 +43,11 @@ public class Game
 		this.gameWorld.addObjectToGameWorld(container);
 		this.gameWorld.addObjectToGameWorld(key);
 		
+		//Actions??
+		GameAction open = new GameAction("open", "open", "used to open containers");
+		GameAction take = new GameAction("take", "take", "used to take items in the world and put them in your inventory");
+		this.dictionary.addGameAction(open);
+		this.dictionary.addGameAction(take);
+		
 	}
 }
