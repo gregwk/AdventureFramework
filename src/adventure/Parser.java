@@ -12,5 +12,5 @@ public interface Parser {
     * @param userInput the string text to be parsed.
     * @throw NullException if Dictionary instance is null
     */
-    public Command parse(String userInput, Dictionary dictionaryObject);
+    public Command parse(String userInput);
 }
