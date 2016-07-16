@@ -53,11 +53,11 @@ public interface Dictionary {
 	 */
 	public List<String> getGameObjects(List<String> objectWords);
 	
-	/* Add a nameId for retrieving game objects from an external object list.
-	 * @param nameId the name of a GameObject
+	/* Supply a new GameObject.
+	 * @param object the GameObject, but really storing its name
 	 * @throw NullException if the supplied object is null
 	 */	
-	public void addGameObject(String nameId);
+	public void addGameObject(GameObject object);
 	
 	/* Add a GameAction which is associated with a verb
 	 * @param action the GameAction to store
