@@ -1,12 +1,11 @@
-
 package adventure;
 
-import tree.ListTree;
+import adventure.util.tree.ListTree;
 
 public class TreeGameWorld implements GameWorld {
 	private ListTree<String, GameObject> treeGameWorld;
 
-	TreeGameWorld(ListTree<String, GameObject> treeGameWorld){
+	public TreeGameWorld(ListTree<String, GameObject> treeGameWorld){
 		this.setTreeGameWorld(treeGameWorld);
 	}
 	
