@@ -1,6 +1,6 @@
 
 /**
- *
+ * GameWorld Object general attributs description class;
  * @author Yeze
  * 
  */
