@@ -1,3 +1,9 @@
+/**
+ *
+ * @author Yeze
+ * 
+ */
+ 
 package adventure;
 
 import java.util.HashSet;
