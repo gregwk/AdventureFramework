@@ -5,13 +5,16 @@
  */
 package adventure;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
  *
  * Implements the Parser interface 
  */
-public class ParserImpl implements Parser {
+public class GameParser implements Parser {
+    
+    List<String> stopWords = Arrays.asList("a", "an", "the", "some");//TODO: this may come from dictionary or GameEngine??
 
     Dictionary mockDictionary = new Dictionary(){
         @Override
@@ -73,7 +76,7 @@ public class ParserImpl implements Parser {
         verifyWordsExitsInDictionary(wordTokenList);
         
         //4. Disambiguate words
-        outputCommand = disambiguateWords(wordTokenList);
+        outputCommand = disambiguateWords(wordTokenList);        
         
         return outputCommand;
     }
@@ -99,10 +102,7 @@ public class ParserImpl implements Parser {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }    
 
-    /*
-    * Disambiguate the action, object1 and object2
-    */
     private Command disambiguateWords(String[] wordTokenList) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }    
+    }
 }
