@@ -1,3 +1,9 @@
+/**
+ *
+ * @author Yeze
+ * 
+ */
+
 package adventure;
 
 import adventure.util.tree.ListTree;
