@@ -1,3 +1,9 @@
+/**
+ * This interface represents all of the public operations that can be performed by the TreeGameWorld
+@Yeze
+ *
+ */
+
 package adventure;
 
 public interface GameWorld {
