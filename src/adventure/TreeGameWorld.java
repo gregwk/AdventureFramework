@@ -1,5 +1,5 @@
 /**
- *
+ * TreeGameWorld implements GameWorld class;
  * @author Yeze
  * 
  */
