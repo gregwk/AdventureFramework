@@ -72,6 +72,9 @@ public class ParserImpl implements Parser {
         //3. Verify words exits in dictionary
         verifyWordsExitsInDictionary(wordTokenList);
         
+        //4. Disambiguate words
+        outputCommand = disambiguateWords(wordTokenList);
+        
         return outputCommand;
     }
 
@@ -93,6 +96,13 @@ public class ParserImpl implements Parser {
     * Verifies that all the words or group of words exits in the dictionary
     */
     private void verifyWordsExitsInDictionary(String[] wordTokenList) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }    
+
+    /*
+    * Disambiguate the action, object1 and object2
+    */
+    private Command disambiguateWords(String[] wordTokenList) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }    
 }
