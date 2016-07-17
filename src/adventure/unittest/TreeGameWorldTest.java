@@ -1,6 +1,6 @@
 
-/**
- *
+ /**
+ * This TreeGameWorldTest Class is to test the TreeGameWorld Class;
  * @author Yeze
  * 
  */
@@ -21,6 +21,13 @@ public class TreeGameWorldTest {
 	TreeGameWorld treeGameWorld;
 
 	@Before
+	
+ /**
+ * Setup GameWorld Objects for testing.
+ * @author Yeze
+ * 
+ */
+	
 	public void setUp() throws Exception {
 		ListTree<String, GameObject> listTree = new ListTree<String, GameObject>();
 		GameObject obj = new GameObject();
@@ -51,6 +58,11 @@ public class TreeGameWorldTest {
 	}
 
 	@Test
+	/**
+         * Test if object is in scope;
+         * @author Yeze
+         * 
+        */
 	public void testIsInScope() {
 		GameObject obj = new GameObject();
 		obj.setId("aaa");
@@ -60,6 +72,11 @@ public class TreeGameWorldTest {
 	}
 	
 	@Test
+	/**
+         * Test if object is moved;
+         * @author Yeze
+         * 
+        */
 	public void testMove() {
 		GameObject obj1 = new GameObject();
 		obj1.setId("Key_1");
@@ -72,7 +89,13 @@ public class TreeGameWorldTest {
 		assertTrue(treeGameWorld.getTreeGameWorld().parent("Key_1").equals("player"));
 	}
 	
-	@Test
+	@Test 
+	/**
+         * Test if object updates property;
+         * @author Yeze
+         * 
+        */
+	
 	public void testUpdateProperty() {
 		GameObject obj = new GameObject();
 		obj.setId("Room_1");
@@ -84,6 +107,11 @@ public class TreeGameWorldTest {
 	}
 	
 	@Test
+	/**
+         * Test if object is in inventory;
+         * @author Yeze
+         * 
+        */
 	public void testIsInInventory() {
 		GameObject obj1 = new GameObject();
 		obj1.setId("Key_1");
