@@ -1,3 +1,10 @@
+
+/**
+ *
+ * @author Yeze
+ * 
+ */
+
 package adventure;
 
 public class GameObject {
