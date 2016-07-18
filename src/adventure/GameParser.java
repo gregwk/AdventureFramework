@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class GameParser implements Parser {
     
-    List<String> stopWords = Arrays.asList("a", "an", "the",);//TODO: this may come from dictionary or GameEngine??
+    List<String> stopWords = Arrays.asList("a", "an", "the");//TODO: this may come from dictionary or GameEngine??
 
     Dictionary dictionaryInstance;
     
@@ -44,7 +44,16 @@ public class GameParser implements Parser {
         //3. Verify words exits in dictionary
         verifyWordsExitsInDictionary(wordTokenList);
         
-        //4. Disambiguate words
+        //4. Verify if the first word is a direction or verb
+        Boolean isDirectionOrVerb = verifyDirectionOrVerb(wordTokenList[0]);
+        
+        //5. If the first word is a verb fetch the corresponding patterns and their associated actions
+           
+        //6. Perform pattern matching using regular expressions
+        
+        //7. Identify objects and their adjectives to disambiguate in the next step
+        
+        //8. Disambiguate words
         outputCommand = disambiguateWords(wordTokenList);        
         
         return outputCommand;
@@ -72,6 +81,10 @@ public class GameParser implements Parser {
     }    
 
     private Command disambiguateWords(String[] wordTokenList) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    private Boolean verifyDirectionOrVerb(String firstWord){
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
