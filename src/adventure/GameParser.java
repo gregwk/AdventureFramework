@@ -75,7 +75,16 @@ public class GameParser implements Parser {
         //3. Verify words exits in dictionary
         verifyWordsExitsInDictionary(wordTokenList);
         
-        //4. Disambiguate words
+        //4. Verify if the first word is a direction or verb
+        verifyDirectionOrVerb(String firstWord);
+        
+        //5. If the first word is a verb fetch the corresponding patterns and their associated actions
+           
+        //6. Perform pattern matching using regular expressions
+        
+        //7. Identify objects and their adjectives
+        
+        //8. Disambiguate words
         outputCommand = disambiguateWords(wordTokenList);        
         
         return outputCommand;
