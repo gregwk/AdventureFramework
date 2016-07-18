@@ -1,5 +1,6 @@
 package adventure;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,40 +12,33 @@ public class GameAction
     private String id;
     private List<String> patterns;
 
+    public GameAction(String id)
+    {
+        if(id == null || id.trim().isEmpty())
+        {
+            throw new IllegalArgumentException("Can not create GameAction with null or empty id");
+        }
+
+        this.id = id;
+        patterns = new ArrayList<String>();
+    }
 
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void addPattern(String pattern )
+    {
+        if(pattern ==null || pattern.trim().isEmpty())
+        {
+            throw new IllegalArgumentException("Can not add null or empty pattern");
+        }
+
+        patterns.add(pattern);
     }
 
     public List<String> getPatterns() {
         return patterns;
     }
 
-    public void setPatterns(List<String> patterns) {
-        this.patterns = patterns;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        GameAction that = (GameAction) o;
-
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
-        if (patterns != null ? !patterns.equals(that.patterns) : that.patterns != null) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (patterns != null ? patterns.hashCode() : 0);
-        return result;
-    }
 }

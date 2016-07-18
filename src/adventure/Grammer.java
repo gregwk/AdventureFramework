@@ -29,6 +29,12 @@ public interface Grammer
      *  Add gameAction to Grammer
      *  @param gameAction object
      * */
-    public void addAction(GameAction gameAction);
+    public void addGameAction(GameAction gameAction);
+
+    /**
+     *
+     *  Check if Grammer contains actionId
+     * */
+    public boolean contains(String actionId);
 
 }

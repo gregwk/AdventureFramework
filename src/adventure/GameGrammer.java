@@ -8,7 +8,7 @@ import java.util.Map;
  * @author adeelahuma
  */
 
-public class AdventureGameGrammer implements Grammer
+public class GameGrammer implements Grammer
 {
     /**
      *  Grammer is stored as a Hashmap
@@ -50,13 +50,45 @@ public class AdventureGameGrammer implements Grammer
 
 
     @Override
-    public void addAction(GameAction gameAction)
+    public void addGameAction(GameAction gameAction)
     {
 
-        if(gameAction != null && gameAction.getId() != null)
+        if(gameAction != null)
         {
+            if(gameAction.getId() == null || gameAction.getId().trim().isEmpty())
+            {
+                throw new IllegalArgumentException("Missing ActionId for game action.");
+            }
+
+            if(gameAction.getPatterns() ==null || gameAction.getPatterns().isEmpty())
+            {
+                throw new IllegalArgumentException("Missing Patterns for game action.");
+            }
+
+            if(contains(gameAction.getId()))
+            {
+                throw new IllegalArgumentException("ActionId already exist in grammer");
+            }
+
+
             grammer.put(gameAction.getId(), gameAction);
         }
+        else
+        {
+            throw new IllegalArgumentException("can not add null game action");
+        }
 
+    }
+
+    @Override
+    public boolean contains(String actionId)
+    {
+        boolean isKey = false;
+
+        if(actionId != null && grammer != null && !grammer.isEmpty())
+        {
+            isKey = grammer.containsKey(actionId);
+        }
+        return isKey;
     }
 }

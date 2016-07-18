@@ -9,10 +9,10 @@ import java.util.List;
 /**
  * @author adeelahuma
  */
-public class AdventureGameGrammerTest
+public class GameGrammerTest
 {
 
-    Grammer grammer = new AdventureGameGrammer();
+    Grammer grammer = new GameGrammer();
 
     /**
      *  convenience get action methods for testing
@@ -23,19 +23,21 @@ public class AdventureGameGrammerTest
         /**
          *  Insert Game Action
          * */
-        GameAction insertAction = new GameAction();
-        insertAction.setId("insert");
+        GameAction insertAction = new GameAction("insert");
 
-        List<String> insertPattern = new ArrayList<String>();
-
-        insertPattern.add("put {object} in {object}");
-        insertPattern.add("put {object} into {object}");
-
-        insertAction.setPatterns(insertPattern);
+        insertAction.addPattern("put {object} in {object}");
+        insertAction.addPattern("put {object} into {object}");
 
         return insertAction;
     }
 
+    private GameAction getCloseAction()
+    {
+        GameAction closeAction = new GameAction("close");
+        closeAction.addPattern("close {object}");
+
+        return closeAction;
+    }
 
     private GameAction getPutOnGameAction()
     {
@@ -43,12 +45,9 @@ public class AdventureGameGrammerTest
         /**
          *  Put_On Game Action
          * */
-        GameAction putOnTopAction = new GameAction();
-        putOnTopAction.setId("put_on_top");
+        GameAction putOnTopAction = new GameAction("put_on_top");
 
-        List<String> putOnPatterns = new ArrayList<String>();
-        putOnPatterns.add("put {object} on {object}");
-        putOnTopAction.setPatterns(putOnPatterns);
+        putOnTopAction.addPattern("put {object} on {object}");
 
         return putOnTopAction;
     }
@@ -59,13 +58,9 @@ public class AdventureGameGrammerTest
         /**
          *  Open Game Action
          * */
-        GameAction openAction = new GameAction();
-        openAction.setId("open");
+        GameAction openAction = new GameAction("open");
 
-        List<String> openPatterns = new ArrayList<String>();
-        openPatterns.add("open {object}");
-
-        openAction.setPatterns(openPatterns);
+        openAction.addPattern("open {object}");
 
         return openAction;
     }
@@ -79,7 +74,7 @@ public class AdventureGameGrammerTest
         Assert.assertNull("Insert Action not found", grammer.getGameAction(action.getId()));
 
         //Add action
-        grammer.addAction(action);
+        grammer.addGameAction(action);
 
         Assert.assertNotNull("Insert Action found", grammer.getGameAction(action.getId()));
 
@@ -90,7 +85,7 @@ public class AdventureGameGrammerTest
     {
         GameAction putGA = getPutOnGameAction();
 
-        grammer.addAction(putGA);
+        grammer.addGameAction(putGA);
         GameAction putGA_1 = grammer.getGameAction(putGA.getId());
 
         Assert.assertNotNull(putGA_1);
@@ -111,11 +106,37 @@ public class AdventureGameGrammerTest
         open = getOpenGameAction();
 
         //add action to grammer
-        grammer.addAction(open);
+        grammer.addGameAction(open);
 
         Assert.assertNotNull("Should Not Null because action inserted in grammer ", grammer.getGameAction("open"));
-        Assert.assertNotNull("Should Not Null because action  inserted in grammer ", grammer.getPatterns("open"));
         Assert.assertNotNull("Action Patterns Not Null", grammer.getPatterns("open"));
+
+    }
+
+    @Test
+    public void containsAction()
+    {
+
+        Assert.assertFalse("action Id does not exist", grammer.contains("close"));
+
+        grammer.addGameAction(getCloseAction());
+
+        Assert.assertTrue("action Id does exist", grammer.contains("close"));
+
+    }
+
+    @Test
+    public void createGameAction()
+    {
+        /**
+         *  Insert Game Action
+         * */
+
+        //GameAction insertAction = new GameAction("  "); method throws exception
+        GameAction insertAction = new GameAction("close");
+
+        //insertAction.addPattern("   "); method throws exception
+        insertAction.addPattern("close {object}");
 
     }
 
