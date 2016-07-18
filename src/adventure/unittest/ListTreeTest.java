@@ -1,3 +1,5 @@
+
+
 package adventure.unittest;
 
 import static org.junit.Assert.*;
@@ -61,6 +63,9 @@ public class ListTreeTest {
     }
     
     @Test
+    /*
+   author Yeze
+   */
     public void testIsDescendent() {
         tree1.addChild("root", "first", 1);
         assertFalse(tree1.isDescendent("root", "first"));
@@ -69,6 +74,9 @@ public class ListTreeTest {
     }
     
     @Test
+    /*
+   author Yeze
+   */
     public void testMoveSubTree() {
     	tree1.addChild("root", "first", 1);
     	tree1.addChild("first", "second", 2);
@@ -79,6 +87,9 @@ public class ListTreeTest {
     }
     
     @Test
+    /*
+   author Yeze 
+   */
     public void testMoveSubTreeIndex() {
     	tree1.addChild("root", "first", 1);
     	tree1.addChild("root", "first_sister1", 2);
