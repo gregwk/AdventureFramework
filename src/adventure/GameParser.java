@@ -14,45 +14,14 @@ import java.util.List;
  */
 public class GameParser implements Parser {
     
-    List<String> stopWords = Arrays.asList("a", "an", "the", "some");//TODO: this may come from dictionary or GameEngine??
+    List<String> stopWords = Arrays.asList("a", "an", "the",);//TODO: this may come from dictionary or GameEngine??
 
-    Dictionary mockDictionary = new Dictionary(){
-        @Override
-        public boolean isAdjective(String word) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public boolean isNoun(String word) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public boolean isVerb(String word) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public boolean isDefined(String word) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public List<String> getActions(String verb) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public List<String> getGameObjects(List<String> objectWords) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public void addGameObject(String nameId) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-            
-            };
+    Dictionary dictionaryInstance;
+    
+    public GameParser(Dictionary dictionary)
+    {
+        dictionaryInstance = dictionary;
+    }
     
     @Override
     public Command parse(String userInput) {
