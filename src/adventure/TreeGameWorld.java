@@ -18,6 +18,9 @@ public class TreeGameWorld implements GameWorld {
 	@Override
 	public boolean isInScope(GameObject obj) {
 		return this.treeGameWorld.contains(obj.getId());
+		/* @throw IllegalArgumentException if the gameObject is not in the scope
+		*/
+		
 	}
 
 	@Override
@@ -33,6 +36,9 @@ public class TreeGameWorld implements GameWorld {
 	@Override
 	public boolean isInInventory(GameObject obj) {
 		return this.treeGameWorld.parent(obj.getId()).equals("player");
+		/* *
+                  * @throw IllegalArgumentException if the inventory in the player is null
+                  */
 	}
 
 	public boolean containProperty(GameObject obj, String prop) {
