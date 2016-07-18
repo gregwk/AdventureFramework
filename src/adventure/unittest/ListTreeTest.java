@@ -59,4 +59,33 @@ public class ListTreeTest {
         tree0.addRoot(null, 0);
         fail();
     }
+    
+    @Test
+    public void testIsDescendent() {
+        tree1.addChild("root", "first", 1);
+        assertFalse(tree1.isDescendent("root", "first"));
+        assertTrue(tree1.isDescendent("root", "root"));
+        assertTrue(tree1.isDescendent("first", "root"));
+    }
+    
+    @Test
+    public void testMoveSubTree() {
+    	tree1.addChild("root", "first", 1);
+    	tree1.addChild("first", "second", 2);
+    	tree1.moveSubTree("second", "root");
+        assertTrue(tree1.parent("second").equals("root"));
+        assertTrue(tree1.childCount("first") == 0);
+        assertTrue(tree1.childCount("root") == 2);
+    }
+    
+    @Test
+    public void testMoveSubTreeIndex() {
+    	tree1.addChild("root", "first", 1);
+    	tree1.addChild("root", "first_sister1", 2);
+    	tree1.addChild("first", "second", 3);
+    	tree1.moveSubTree(1, "second", "root");
+    	assertTrue(tree1.parent("second").equals("root"));
+        assertTrue(tree1.childCount("first") == 0);
+        assertTrue(tree1.childCount("root") == 3);
+    }
 }
