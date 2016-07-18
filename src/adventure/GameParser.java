@@ -82,7 +82,7 @@ public class GameParser implements Parser {
            
         //6. Perform pattern matching using regular expressions
         
-        //7. Identify objects and their adjectives
+        //7. Identify objects and their adjectives to disambiguate in the next step
         
         //8. Disambiguate words
         outputCommand = disambiguateWords(wordTokenList);        
