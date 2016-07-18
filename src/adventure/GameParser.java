@@ -45,11 +45,7 @@ public class GameParser implements Parser {
         verifyWordsExitsInDictionary(wordTokenList);
         
         //4. Verify if the first word is a direction or verb
-<<<<<<< HEAD
         Boolean isDirectionOrVerb = verifyDirectionOrVerb(wordTokenList[0]);
-=======
-        verifyDirectionOrVerb(String firstWord);
->>>>>>> 42ef95c278b9ed0e4733d20c3b367369a09e31ea
         
         //5. If the first word is a verb fetch the corresponding patterns and their associated actions
            
