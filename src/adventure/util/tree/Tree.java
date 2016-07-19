@@ -1,5 +1,5 @@
 
-package tree;
+package adventure.util.tree;
 
 /**
  * A tree is a data structure that maintains the object values it holds in
