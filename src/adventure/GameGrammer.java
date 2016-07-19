@@ -15,19 +15,18 @@ public class GameGrammer implements Grammer
      *      key = actionId
      *      value = GameAction
      * */
-    Map<String, GameAction> grammer = new HashMap<String, GameAction>();
+    Map<String, GameAction> actionMap = new HashMap<String, GameAction>();
 
     @Override
     public GameAction getGameAction(String actionId)
     {
-        GameAction gameAction = null;
 
-        if(actionId != null && grammer != null && !grammer.isEmpty())
+        if(!contains(actionId))
         {
-            gameAction = grammer.get(actionId);
+            throw new IllegalArgumentException("ActionId does not exist");
         }
 
-        return gameAction;
+        return actionMap.get(actionId);
     }
 
     @Override
@@ -35,9 +34,9 @@ public class GameGrammer implements Grammer
     {
         List<String> patterns = null;
 
-        if(actionId != null && grammer != null && !grammer.isEmpty())
+        if(actionId != null)
         {
-            GameAction gameAction = grammer.get(actionId);
+            GameAction gameAction = actionMap.get(actionId);
 
             if(gameAction != null )
             {
@@ -57,21 +56,22 @@ public class GameGrammer implements Grammer
         {
             if(gameAction.getId() == null || gameAction.getId().trim().isEmpty())
             {
-                throw new IllegalArgumentException("Missing ActionId for game action.");
+                throw new IllegalArgumentException("Missing ActionId for game action");
             }
 
-            if(gameAction.getPatterns() ==null || gameAction.getPatterns().isEmpty())
+            if(gameAction.getPatterns() == null || gameAction.getPatterns().isEmpty())
             {
-                throw new IllegalArgumentException("Missing Patterns for game action.");
+                throw new IllegalArgumentException("Missing Patterns for game action");
             }
 
             if(contains(gameAction.getId()))
             {
-                throw new IllegalArgumentException("ActionId already exist in grammer");
+                throw new IllegalArgumentException("ActionId already exists");
             }
 
 
-            grammer.put(gameAction.getId(), gameAction);
+            actionMap.put(gameAction.getId(), gameAction);
+
         }
         else
         {
@@ -83,12 +83,6 @@ public class GameGrammer implements Grammer
     @Override
     public boolean contains(String actionId)
     {
-        boolean isKey = false;
-
-        if(actionId != null && grammer != null && !grammer.isEmpty())
-        {
-            isKey = grammer.containsKey(actionId);
-        }
-        return isKey;
+        return  actionMap.containsKey(actionId);
     }
 }
