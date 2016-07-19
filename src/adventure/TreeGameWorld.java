@@ -16,34 +16,36 @@ public class TreeGameWorld implements GameWorld {
 	}
 	
 	@Override
-	public boolean isInScope(GameObject obj) {
-		return this.treeGameWorld.contains(obj.getId());
-		/* @throw IllegalArgumentException if the gameObject is not in the scope
-		*/
-		
+	public boolean isInScope(String objId) {
+		return this.treeGameWorld.contains(objId);
 	}
 
 	@Override
-	public void move(GameObject obj1, GameObject obj2) {
-		this.treeGameWorld.moveSubTree(obj1.getId(), obj2.getId());
+	public void move(String obj1Id, String obj2Id) {
+		this.treeGameWorld.moveSubTree(obj1Id, obj2Id);
 	}
 
 	@Override
-	public void updateProperty(GameObject obj, Property prop) {
-		this.treeGameWorld.get(obj.getId()).updateProperty(prop);
+	public void addProperty(String objId, String prop) {
+		this.treeGameWorld.get(objId).addProperty(prop);
 	}
 
 	@Override
-	public boolean isInInventory(GameObject obj) {
-		return this.treeGameWorld.parent(obj.getId()).equals("player");
-		/* *
-                  * @throw IllegalArgumentException if the inventory in the player is null
-                  */
+	public boolean isInInventory(String objId) {
+		return this.treeGameWorld.parent(objId).equals("player");
 	}
 
-	public boolean containProperty(GameObject obj, String prop) {
-		return this.treeGameWorld.get(obj.getId()).getProperty().containProperty(prop);
+	@Override
+	public boolean containsProperty(String objId, String prop) {
+		return this.treeGameWorld.get(objId).containsProperty(prop);
 	}
+	
+	@Override
+	public void removeProperty(String objId, String prop) {
+		// TODO Auto-generated method stub
+		this.treeGameWorld.get(objId).removeProperty(prop);
+	}
+	
 	/**
 	 * @return the treeGameWorld
 	 */
@@ -59,3 +61,4 @@ public class TreeGameWorld implements GameWorld {
 	}
 
 }
+
