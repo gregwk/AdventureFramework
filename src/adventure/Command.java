@@ -27,11 +27,6 @@ public class Command {
     public String object2;
     
     /*
-    * Error code to be returned by Parser
-    */
-    public String errorCode;
-    
-    /*
     * Error message or any other message
     */
     public String errorMessage;
