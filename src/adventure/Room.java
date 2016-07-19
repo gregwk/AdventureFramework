@@ -7,49 +7,71 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class Room extends CompositeObject
+public class Room extends GameObject
 {
 	protected Set<GameObject> containedObjects;
-	protected Map<String, Room> connectedRooms;
+	protected Map<String, Door> doors;
+	protected Map<String, Room> exits;
 	
-	public Room(String id, String description, String displayName, String[] nouns, String[] adjectives)
+	public Room(String name, String description) 
 	{
-		super(id, description, displayName, nouns, adjectives);
-		containedObjects = new HashSet<GameObject>();
-		connectedRooms = new HashMap<String, Room>();
+		super(name, description);
+		init();
 	}
-	
-	public Room(String id)
+	public Room(String name) 
 	{
-		super(id);
-		containedObjects = new HashSet<GameObject>();
-		connectedRooms = new HashMap<String, Room>();
-	}
-
-	@Override
-	public boolean add(GameObject object) {
-		return containedObjects.add(object);
-	}
-
-	@Override
-	public boolean contains(GameObject object) {
-		return containedObjects.contains(object);
-	}
-
-	@Override
-	public boolean remove(GameObject object) {
-		return containedObjects.remove(object);
+		super(name);
+		init();
 	}
 	
-	public void addConnectedRoom(String direction, Room room)
+	private void init()
 	{
-		this.connectedRooms.put(direction, room);
+		this.doors = new HashMap<String, Door>();
+		this.exits = new HashMap<String, Room>();
 	}
 	
-	public Room getConnectedRoom(String direction, Room room)
+	public void addExit(String roomKey, Room room)
 	{
-		return this.connectedRooms.get(room);
+		this.exits.put(roomKey, room);
 	}
 	
-
+	public Room removeExit(String roomKey)
+	{
+		return this.exits.remove(roomKey);
+	}
+	
+	public boolean containsExit(String roomKey)
+	{
+		return this.exits.containsKey(roomKey);
+	}
+	
+	public void addDoor(String doorKey, Door door)
+	{
+		this.doors.put(doorKey, door);
+	}
+	
+	public Door removeDoor(String doorKey)
+	{
+		return this.doors.remove(doorKey);
+	}
+	
+	public boolean containsDoor(String doorKey)
+	{
+		return this.containsDoor(doorKey);
+	}
+	
+	public void addObjectToRoom(GameObject o)
+	{
+		this.containedObjects.add(o);
+	}
+	
+	public boolean removeObjectFromRoom(GameObject o)
+	{
+		return this.containedObjects.remove(o);
+	}
+	
+	public boolean hasObjectInRoom(GameObject o)
+	{
+		return this.containedObjects.contains(o);
+	}
 }

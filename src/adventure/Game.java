@@ -16,31 +16,24 @@ public class Game
 		//Set basic room layout
 		Room kitchen = new Room("kitchen");
 		kitchen.setDescription("A normal kitchen");
-		kitchen.setNouns("kitchen");
 		
 		Room garage = new Room("garage");
 		garage.setDescription("A dank, musty garage");
-		garage.setNouns("garage");
 		
-		garage.addConnectedRoom("east", kitchen);
-		kitchen.addConnectedRoom("west", garage);
+		garage.addExit("east", kitchen);
+		kitchen.addExit("west", garage);
 		
 		//Add objects to Garage
-		Container container = new Container("toolbox");
-		container.setNouns("toolbox");
-		
 		Thing key = new Thing("key");
 		key.setDescription("A rusty toolbox");
-		key.setNouns("key");
-		key.setTakable(true);
+		key.setIsTakable(true);
 		
 		//Add key in toolbox
-		container.add(key);
+		garage.addObjectToRoom(key);
 		
 		//Add everything to GameWorld
 		this.gameWorld.addObjectToGameWorld(kitchen);
 		this.gameWorld.addObjectToGameWorld(garage);
-		this.gameWorld.addObjectToGameWorld(container);
 		this.gameWorld.addObjectToGameWorld(key);
 		
 		//Actions??
@@ -48,6 +41,5 @@ public class Game
 		GameAction take = new GameAction("take", "take", "used to take items in the world and put them in your inventory");
 		this.dictionary.addGameAction(open);
 		this.dictionary.addGameAction(take);
-		
 	}
 }
