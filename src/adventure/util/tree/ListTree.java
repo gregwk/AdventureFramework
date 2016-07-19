@@ -1,4 +1,4 @@
-package tree;
+package adventure.util.tree;
 
 import java.util.HashMap;
 import java.util.LinkedList;
