@@ -67,7 +67,7 @@ public class GameObject
 	
 	private String generateIdFromName(String name)
 	{
-		return name.replaceAll("\\s+","");
+		return name.replaceAll("\\s+","_");
 	}
 	
 	/**

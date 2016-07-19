@@ -1,6 +1,7 @@
 package adventure;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -57,7 +58,7 @@ public class Room extends GameObject
 	
 	public boolean containsDoor(String doorKey)
 	{
-		return this.containsDoor(doorKey);
+		return this.doors.containsKey(doorKey);
 	}
 	
 	public void addObjectToRoom(GameObject o)
@@ -73,5 +74,15 @@ public class Room extends GameObject
 	public boolean hasObjectInRoom(GameObject o)
 	{
 		return this.containedObjects.contains(o);
+	}
+	
+	public Collection<Room> getAllExits()
+	{
+		return new ArrayList<>(this.exits.values());
+	}
+	
+	public Collection<Door> getAllDoors()
+	{
+		return new ArrayList<>(this.doors.values());
 	}
 }
