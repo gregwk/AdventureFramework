@@ -12,7 +12,7 @@ import java.util.List;
 public class GameGrammerTest
 {
 
-    Grammer grammer = new GameGrammer();
+    Grammer grammer = GameGrammer.getInstance();
 
     /**
      *  convenience get action methods for testing

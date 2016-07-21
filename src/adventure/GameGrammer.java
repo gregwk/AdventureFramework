@@ -10,6 +10,17 @@ import java.util.Map;
 
 public class GameGrammer implements Grammer
 {
+
+    private static GameGrammer INSTANCE = new GameGrammer();
+
+
+    private GameGrammer()
+    {
+        /**
+         *  private constructor
+         * */
+    }
+
     /**
      *  Grammer is stored as a Hashmap
      *      key = actionId
@@ -84,5 +95,11 @@ public class GameGrammer implements Grammer
     public boolean contains(String actionId)
     {
         return  actionMap.containsKey(actionId);
+    }
+
+
+    public static GameGrammer getInstance()
+    {
+        return INSTANCE;
     }
 }
