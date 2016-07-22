@@ -1,17 +1,12 @@
 package adventure;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class Room extends GameObject {
-  protected Set<GameObject> containedObjects;
-  protected Map<String, Door> doors;
-  protected Map<String, Room> exits;
+  
+  private Map<String, Door> doors;
+  private Map<String, Room> exits;
 
   public Room(String name, String description) {
     super(name, description);
@@ -28,47 +23,28 @@ public class Room extends GameObject {
     this.exits = new HashMap<String, Room>();
   }
 
-  public void addExit(String roomKey, Room room) {
-    this.exits.put(roomKey, room);
+  public void addExit(String direction, Room room) {
+    this.exits.put(direction, room);
   }
 
-  public Room removeExit(String roomKey) {
-    return this.exits.remove(roomKey);
+  public Room removeExit(String direction) {
+    return this.exits.remove(direction);
   }
 
-  public boolean containsExit(String roomKey) {
-    return this.exits.containsKey(roomKey);
+  public boolean containsExit(String direction) {
+    return this.exits.containsKey(direction);
   }
 
-  public void addDoor(String doorKey, Door door) {
-    this.doors.put(doorKey, door);
+  public void addDoor(String direction, Door door) {
+    this.doors.put(direction, door);
   }
 
-  public Door removeDoor(String doorKey) {
-    return this.doors.remove(doorKey);
+  public Door removeDoor(String direction) {
+    return this.doors.remove(direction);
   }
 
-  public boolean containsDoor(String doorKey) {
-    return this.doors.containsKey(doorKey);
+  public boolean containsDoor(String direction) {
+    return this.doors.containsKey(direction);
   }
 
-  public void addObjectToRoom(GameObject o) {
-    this.containedObjects.add(o);
-  }
-
-  public boolean removeObjectFromRoom(GameObject o) {
-    return this.containedObjects.remove(o);
-  }
-
-  public boolean hasObjectInRoom(GameObject o) {
-    return this.containedObjects.contains(o);
-  }
-
-  public Collection<Room> getAllExits() {
-    return new ArrayList<>(this.exits.values());
-  }
-
-  public Collection<Door> getAllDoors() {
-    return new ArrayList<>(this.doors.values());
-  }
 }

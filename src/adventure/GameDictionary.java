@@ -4,6 +4,8 @@ import java.util.List;
 
 public class GameDictionary implements Dictionary {
 
+  // singleton pattern
+  
   private static final Dictionary INSTANCE = new GameDictionary();
 
   private GameDictionary() {
@@ -14,6 +16,8 @@ public class GameDictionary implements Dictionary {
     return INSTANCE;
   }
 
+  // public methods
+  
   @Override
   public boolean isAdjective(String word) {
     // TODO Auto-generated method stub

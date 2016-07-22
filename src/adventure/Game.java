@@ -1,43 +1,38 @@
 package adventure;
 
 public class Game {
-  private Dictionary dictionary;
-  private GameWorld gameWorld;
+  
+  private Dictionary dictionary = GameDictionary.getInstance();
+  private GameWorld world = TreeGameWorld.getInstance();
 
-  public Game(Dictionary dict, GameWorld world) {
-    this.dictionary = dict;
-    this.gameWorld = world;
-  }
+  public Game() {}
 
   public void initialize() {
-    // Set basic room layout
-    Room kitchen = new Room("kitchen");
-    kitchen.setDescription("A normal kitchen");
 
-    Room garage = new Room("garage");
-    garage.setDescription("A dank, musty garage");
+    Room kitchen = new Room("kitchen", "A normal kitchen.");
+    Room garage = new Room("musty garage", "A dank, musty garage.");
 
     garage.addExit("east", kitchen);
     kitchen.addExit("west", garage);
 
-    // Add objects to Garage
-    Thing key = new Thing("key");
-    key.setDescription("A rusty toolbox");
-    key.setIsTakable(true);
+    Thing key = new Thing("rusty iron key", "The key looks so old and rusty that you doubt it would open anything.");
+    key.setParent("musty_garage");
 
-    // Add key in toolbox
-    garage.addObjectToRoom(key);
+    world.addGameObject(kitchen);
+    dictionary.addGameObject(kitchen);
+    
+    world.addGameObject(garage);
+    dictionary.addGameObject(kitchen);
+    
+    world.addGameObject(key);
+    dictionary.addGameObject(key);
 
-    // Add everything to GameWorld
-    this.gameWorld.addGameObject(kitchen);
-    this.gameWorld.addGameObject(garage);
-    this.gameWorld.addGameObject(key);
-
-    // Actions??
-    GameAction open = new GameAction("open", "open", "used to open containers");
-    GameAction take = new GameAction("take", "take",
-        "used to take items in the world and put them in your inventory");
-    this.dictionary.addGameAction(open);
-    this.dictionary.addGameAction(take);
+    Actor bob = new Actor("bob", "You look the same as always.");
+    bob.setParent("kitchen");
+    
+    world.addGameObject(bob);
+    world.setPlayer(bob);
+    dictionary.addGameObject(bob);
+    
   }
 }
