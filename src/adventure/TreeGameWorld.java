@@ -9,7 +9,20 @@ package adventure;
 import adventure.util.tree.ListTree;
 
 public class TreeGameWorld implements GameWorld {
-	private ListTree<String, GameObject> treeGameWorld;
+
+  // singleton pattern
+  
+  private static final GameWorld INSTANCE = new TreeGameWorld();
+
+  private TreeGameWorld() {}
+
+  public static GameWorld getInstance() {
+    return INSTANCE;
+  }  
+  
+  // instance variables
+  
+  private ListTree<String, GameObject> treeGameWorld;
 
 	public TreeGameWorld(ListTree<String, GameObject> treeGameWorld){
 		this.setTreeGameWorld(treeGameWorld);

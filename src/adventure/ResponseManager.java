@@ -1,11 +1,15 @@
 package adventure;
+
 /**
  * @author SweetuPatel
  */
 public class ResponseManager {
+
+  private GameWorld world = TreeGameWorld.getInstance();
+  
+  Response getResponse(Command command) {
     
-	Response getResponse(Command command) {
-		Response response = null;
+    Response response = null;
 
 		// find out what room the player is in. PlayerLocation method is required in gameWorld class 
 		Room room = gameWorld.playerLocation();
@@ -54,15 +58,14 @@ public class ResponseManager {
     return response; 
 	}
 
-	Response actionResponse(Command command)
-	{
-		// Case statement to response according to passed action ;
-		return response;
-	}
-	public Response errorResponse(Command command)
-	{
-		// Case statement to response according to passed error message 
-		return response;
-	}
+  Response actionResponse(Command command) {
+    // Case statement to response according to passed action ;
+    return response;
+  }
+
+  public Response errorResponse(Command command) {
+    // Case statement to response according to passed error message
+    return response;
+  }
 }
 

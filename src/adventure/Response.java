@@ -1,8 +1,12 @@
 package adventure;
+
 /**
  * @author SweetuPatel
  */
 public class Response {
-	public String getKind;
-    public String message;
+  
+  public String kind;
+
+  public String message;
+
 }
