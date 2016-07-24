@@ -140,7 +140,7 @@ public class GameDictionary implements Dictionary {
     		} else {
     			boolean found = false;	// flag to determine if word was found in the GameObject list
     			for(GameObject G: GOs){
-    				if(G.containsAdjective(s) || G.containsNoun(s))){
+    				if(G.containsAdjective(s) || G.containsNoun(s)){
     					objIDs.add(new String(G.getId()));
     					found = true;	// object found in list
     				}
