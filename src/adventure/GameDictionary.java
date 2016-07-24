@@ -42,7 +42,7 @@ public class GameDictionary implements Dictionary {
 		 if(found) return true;	// return true when found, stop for loop
 	 }
 	 
-	 return found;
+	 return found; // return false
  }
   
   // public methods
@@ -109,6 +109,9 @@ public class GameDictionary implements Dictionary {
 	  return found;
   }
 
+  /*
+   * Returns a string list of actionIDs for the supplied verb. 
+   */
   @Override
   public List<String> getActions(String verb) {
 	  if(verb == null) throw new NullPointerException("Dictionary.getActions: supplied verb is null");
@@ -159,6 +162,7 @@ public class GameDictionary implements Dictionary {
     }
 
   }
+
   @Override
   public void addGameAction(GameAction action) {
 	  if(action == null){
