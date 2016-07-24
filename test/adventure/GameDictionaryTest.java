@@ -30,8 +30,8 @@ public class GameDictionaryTest {
 		
 		gameobj = new Thing("Box", "A box to hold things");
 		
-		List<String> objwords = null;
-		Assert.assertNull("Should be null before initialization", objwords);
+		List<String> objwords = new List<String>();
+		//Assert.assertNull("Should be null before initialization", objwords);
 		objwords.add("Box");
 		
 		// would fail = "NoSuchElementException" is returned for not including an object
