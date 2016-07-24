@@ -1,13 +1,7 @@
 /**
  * TreeGameWorld implements GameWorld class;
  * @author Yeze
- * 
- */
-
-/**
- * TreeGameWorld implements GameWorld class;
- * 
- * @author Yeze
+ * 2016/07/24
  * 
  */
 
