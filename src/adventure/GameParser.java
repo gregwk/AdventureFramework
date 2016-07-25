@@ -107,17 +107,24 @@ public class GameParser implements Parser {
   /*
    * Returns array of strings in order as entered by user
    */
-  private String[] tokenizeWords(String userInput) {
-    return userInput.split("\\s+");
+  public String[] tokenizeWords(String userInput) {
+    String[] wordTokens = userInput.split("\\s+");
+    if(wordTokens.length == 1 && "".equals(wordTokens[0]))
+    {
+        //If the user input is empty string or white space
+        //then return null
+        wordTokens = null;
+    }
+    
+    return wordTokens;
   }
 
   /*
    * Removes any stop words such as articles and others ??
    */
   private void removeStopWords(String[] stopWords, String[] wordTokenList) {
-    throw new UnsupportedOperationException("Not supported yet."); // To change body of generated
-                                                                   // methods, choose Tools |
-                                                                   // Templates.
+    if(stopWords == null || stopWords.length == 0 || wordTokenList == null || wordTokenList.length == 0)
+        return;
   }
 
   /*

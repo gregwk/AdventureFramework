@@ -49,9 +49,14 @@ public class GameParserTest {
         public List<String> getGameObjects(List<String> objectWords) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
+        
+        @Override
+        public void addGameObject(GameObject object) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
 
         @Override
-        public void addGameObject(String nameId) {
+        public void addGameAction(GameAction action) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
     };
@@ -88,4 +93,42 @@ public class GameParserTest {
         assertEquals("Empty Input", result.errorMessage);
     }
     
+    /**
+     * Test of tokenizeword method with empty user input
+     */
+    @Test
+    public void testTokenizeEmptyString(){
+        System.out.println("tokenize");
+        String userInput = "";
+        GameParser instance = GameParser.getInstance();
+        String[] result = instance.tokenizeWords(userInput);
+        assertNull(result);
+    }
+    
+    /**
+     * Test of tokenizeWord method with single word
+     */
+    @Test
+    public void testTokenizeSingleWordUserInput(){
+        System.out.println("tokenize");
+        String userInput = "Test";
+        GameParser instance = GameParser.getInstance();
+        String[] result = instance.tokenizeWords(userInput);
+        assertNotNull(result);
+        assertEquals(1, result.length);
+        assertEquals("Test", result[0]);
+    }
+    
+    @Test
+    public void testTokenizeMultipleWordUserInput(){
+        System.out.println("tokenize");
+        String userInput = "This is test";
+        GameParser instance = GameParser.getInstance();
+        String[] result = instance.tokenizeWords(userInput);
+        assertNotNull(result);
+        assertEquals(3, result.length);
+        assertEquals("This", result[0]);
+        assertEquals("is", result[1]);
+        assertEquals("test", result[2]);
+    }
 }
