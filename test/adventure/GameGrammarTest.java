@@ -3,16 +3,15 @@ package adventure;
 import junit.framework.Assert;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author adeelahuma
  */
-public class GameGrammerTest
+public class GameGrammarTest
 {
 
-    Grammar grammer = GameGrammar.getInstance();
+    GameGrammar grammar = GameGrammar.getInstance();
 
     /**
      *  convenience get action methods for testing
@@ -71,13 +70,13 @@ public class GameGrammerTest
 
         GameAction action = getInsertGameAction();
 
-        //Assert.assertNull("Insert Action not found", grammer.getGameAction(action.getId())); //commented as method throws exception
+        //Assert.assertNull("Insert Action not found", grammar.getGameAction(action.getId())); //commented as method throws exception
 
 
         //Add action
-        grammer.addGameAction(action);
+        grammar.addGameAction(action);
 
-        Assert.assertNotNull("Insert Action found", grammer.getGameAction(action.getId()));
+        Assert.assertNotNull("Insert Action found", grammar.getGameAction(action.getId()));
 
     }
 
@@ -86,8 +85,8 @@ public class GameGrammerTest
     {
         GameAction putGA = getPutOnGameAction();
 
-        grammer.addGameAction(putGA);
-        GameAction putGA_1 = grammer.getGameAction(putGA.getId());
+        grammar.addGameAction(putGA);
+        GameAction putGA_1 = grammar.getGameAction(putGA.getId());
 
         Assert.assertNotNull(putGA_1);
         Assert.assertEquals("Inserted and Retreived Object are same", putGA, putGA_1);
@@ -96,21 +95,21 @@ public class GameGrammerTest
     @Test
     public void getPatterns()
     {
-        GameAction open = null;//grammer.getGameAction("open"); // commented as method throws exception
+        GameAction open = null;//grammar.getGameAction("open"); // commented as method throws exception
 
         Assert.assertNull("Should be Null because action not inserted in actionMap yet", open);
 
-        List<String> openAction = grammer.getPatterns("open");
+        List<String> openAction = grammar.getPatterns("open");
 
         Assert.assertNull("Should be Null because action not inserted in actionMap yet", openAction);
 
         open = getOpenGameAction();
 
         //add action to actionMap
-        grammer.addGameAction(open);
+        grammar.addGameAction(open);
 
-        Assert.assertNotNull("Should Not Null because action inserted in actionMap ", grammer.getGameAction("open"));
-        Assert.assertNotNull("Action Patterns Not Null", grammer.getPatterns("open"));
+        Assert.assertNotNull("Should Not Null because action inserted in actionMap ", grammar.getGameAction("open"));
+        Assert.assertNotNull("Action Patterns Not Null", grammar.getPatterns("open"));
 
     }
 
@@ -118,11 +117,11 @@ public class GameGrammerTest
     public void containsAction()
     {
 
-        Assert.assertFalse("action Id does not exist", grammer.contains("close"));
+        Assert.assertFalse("action Id does not exist", grammar.contains("close"));
 
-        grammer.addGameAction(getCloseAction());
+        grammar.addGameAction(getCloseAction());
 
-        Assert.assertTrue("action Id does exist", grammer.contains("close"));
+        Assert.assertTrue("action Id does exist", grammar.contains("close"));
 
     }
 
@@ -140,5 +139,14 @@ public class GameGrammerTest
         insertAction.addPattern("close {object}");
 
     }
+
+    @Test
+    public void initialize()
+    {
+        Assert.assertFalse("action Id does not exist", grammar.contains("examine"));
+        grammar.init();
+        Assert.assertTrue("action Id does exist", grammar.contains("examine"));
+    }
+
 
 }
