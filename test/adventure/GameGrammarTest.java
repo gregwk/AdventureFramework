@@ -143,9 +143,9 @@ public class GameGrammarTest
     @Test
     public void initialize()
     {
-        Assert.assertFalse("action Id does not exist", grammar.contains("ex"));
+        Assert.assertFalse("action Id does not exist", grammar.contains("examine"));
         grammar.init();
-        Assert.assertTrue("action Id does exist", grammar.contains("ex"));
+        Assert.assertTrue("action Id does exist", grammar.contains("examine"));
     }
 
 

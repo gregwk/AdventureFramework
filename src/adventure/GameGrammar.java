@@ -91,9 +91,10 @@ public class GameGrammar implements Grammar {
 
     private GameAction getExamineAction()
     {
-        GameAction exAction = new GameAction("ex");
+        GameAction exAction = new GameAction("examine");
         exAction.addPattern("examine {object}");
-        exAction.addPattern("ex {object}");
+        exAction.addPattern("x {object}");
+        exAction.addPattern("look at {object}");
 
         return exAction;
     }
