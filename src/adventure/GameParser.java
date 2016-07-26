@@ -142,8 +142,11 @@ public class GameParser implements Parser {
     return wordTokens;
   }
 
-  /*
-   * Removes any stop words such as articles and others ??
+  /**
+   * Removes any stop words such as articles
+   * @param stopWords The array of String that are to be filtered from user input
+   * @param wordTokenList The user input from which the stop words are to be filtered
+   * @return The remaining array of Strings after stop words are filtered from wordTokenList
    */
   public String[] removeStopWords(String[] stopWords, String[] wordTokenList) {
     if(stopWords == null || stopWords.length == 0)
@@ -163,10 +166,15 @@ public class GameParser implements Parser {
   /*
    * Verifies that all the words or group of words exits in the dictionary
    */
-  private void verifyWordsDefined(String[] words) {
-    throw new UnsupportedOperationException("Not supported yet."); // To change body of generated
-                                                                   // methods, choose Tools |
-                                                                   // Templates.
+  public void verifyWordsDefined(String[] words) {
+    if(words != null || words.length > 0){
+        for(String word : words){
+            if(!dictionary.isDefined(word)){
+                command.errorMessage = String.format("%s is not defined.", word);
+                return;
+            }
+        }
+    }
   }
 
   private Command disambiguateNounWords(String[] words) {
