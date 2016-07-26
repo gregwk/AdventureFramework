@@ -1,17 +1,8 @@
 package adventure.util.tree;
 
 import static org.junit.Assert.*;
-
 import org.junit.Before;
 import org.junit.Test;
-
-/**
- *  Unit testing of ListTree class
- *
- *  @author gregory
- *  @author Lulu 
- *  @version Jul 19, 2016
- */
 
 public class ListTreeTest {
 	
@@ -82,9 +73,13 @@ public class ListTreeTest {
 	}
 	
 	@Test
-	public void testParent() {		
-		assertTrue(tree1.contains(tree1.parent("second")));
+	public void testParent() {	
+		tree1.addChild("second", "third", 3);
+		assertTrue(tree1.contains(tree1.parent("third")));
+		assertEquals(tree1.parent("third"), "second");
 		assertEquals(tree1.parent("second"), "root");
+		assertTrue(tree1.isDescendent("third", "second"));
+		assertTrue(tree1.isDescendent("third", "root"));
 	}
 
 	@Test
@@ -123,10 +118,14 @@ public class ListTreeTest {
 
 	@Test
 	public void testMoveSubTreeKK() {// to be focused on
-		tree1.addChild("second", "third", new Integer(3));
+		tree1.addChild("second", "third", 3);
 		tree1.moveSubTree("third", "root");
-		assertTrue(tree1.isDescendent("third", "root"));
-        assertEquals(tree1.childCount("root"), 2);
+		//here, the third node is not removed from the second node, nor added to the root node
+		assertTrue(tree1.isDescendent("third", "second"));  	
+		assertTrue(tree1.parent("third").equals("second"));
+		assertTrue(tree1.parent("third").equals("root"));//it does not passes
+		assertEquals(tree1.parent("third"),"second");
+       assertEquals(tree1.childCount("second"), 0);
 
 	}
 
@@ -140,4 +139,3 @@ public class ListTreeTest {
 
 
 }
-
