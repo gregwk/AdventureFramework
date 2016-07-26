@@ -94,30 +94,30 @@ public class GameParserTest {
         assertEquals("Empty Input", result.errorMessage);
     }
     
-    /**
-     * Test of tokenizeword method with empty user input
-     */
+    //Test match function when input matches with the pattern and contains two objects
     @Test
-    public void testTokenizeEmptyString(){
-        System.out.println("tokenize");
+    public void testParseForMatch() {
+        System.out.println("parse");
+        String userInput = "abc";
+        GameParser instance = GameParser.getInstance();
+        Command result = instance.parse(userInput);
+        assertNotNull(result);
+        assertEquals("basket ball", result.object1);
+        assertEquals("basket box ", result.object2);
+    }
+
+    @Test
+    public void testMatchWithMatchingParameters() {
+        System.out.println("parse");
         String userInput = "";
         GameParser instance = GameParser.getInstance();
-        String[] result = instance.tokenizeWords(userInput);
-        assertNull(result);
-    }
-    
-    /**
-     * Test of tokenizeWord method with single word
-     */
-    @Test
-    public void testTokenizeSingleWordUserInput(){
-        System.out.println("tokenize");
-        String userInput = "Test";
-        GameParser instance = GameParser.getInstance();
-        String[] result = instance.tokenizeWords(userInput);
-        assertNotNull(result);
-        assertEquals(1, result.length);
-        assertEquals("Test", result[0]);
+        
+        String[] wLIst = new String[]{"Put","basket", "ball","in","basket","box"};
+        String Pattern = "Put (\\D*) in (\\D*)";
+  
+        boolean op = instance.match(wLIst, Pattern);
+        assertNotNull(op);
+        assertEquals(true, op);
     }
     
     /**

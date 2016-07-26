@@ -7,6 +7,8 @@ package adventure;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -163,6 +165,39 @@ public class GameParser implements Parser {
     return wordList.toArray(new String[0]);
   }
 
+    private Command disambiguateNounWords(String[] words) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    public boolean match(String[] words, String pattern)
+    {
+        StringBuilder wordsString = new StringBuilder();
+        for (int i = 0; i < words.length; i++)
+        {
+            wordsString.append(words[i]);
+            wordsString.append(" ");
+        }
+        String Sentence = wordsString.toString();
+        Pattern patternToCheck = Pattern.compile(pattern,Pattern.CASE_INSENSITIVE);
+        Matcher matchedPattern = patternToCheck.matcher(Sentence);
+        
+        if(matchedPattern.find( ))
+        {
+           try
+            {
+                command.object1 = matchedPattern.group(1);
+                command.object2 = matchedPattern.group(2);
+       
+                return true;
+            }
+            catch(IndexOutOfBoundsException ex)
+            {
+                //System.out.println(ex.getMessage());
+                return true;
+            }
+        }
+        return false;
+    }
   /*
    * Verifies that all the words or group of words exits in the dictionary
    */
@@ -175,15 +210,5 @@ public class GameParser implements Parser {
             }
         }
     }
-  }
-
-  private Command disambiguateNounWords(String[] words) {
-    throw new UnsupportedOperationException("Not supported yet."); // To change body of generated
-                                                                   // methods, choose Tools |
-                                                                   // Templates.
-  }
-
-  private boolean match(String[] words, String pattern) {
-    throw new UnsupportedOperationException("Not supported yet.");
   }
 }
