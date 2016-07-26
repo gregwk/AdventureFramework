@@ -11,7 +11,7 @@ import java.util.List;
 public class GameGrammarTest
 {
 
-    Grammar grammar = GameGrammar.getInstance();
+    GameGrammar grammar = GameGrammar.getInstance();
 
     /**
      *  convenience get action methods for testing
@@ -139,5 +139,14 @@ public class GameGrammarTest
         insertAction.addPattern("close {object}");
 
     }
+
+    @Test
+    public void initialize()
+    {
+        Assert.assertFalse("action Id does not exist", grammar.contains("ex"));
+        grammar.init();
+        Assert.assertTrue("action Id does exist", grammar.contains("ex"));
+    }
+
 
 }
