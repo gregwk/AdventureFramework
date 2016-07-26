@@ -4,6 +4,8 @@
  */
 package adventure;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -49,7 +51,7 @@ public class GameParser implements Parser {
     }
 
     // 2. Remove stop words
-    removeStopWords(stopWords, wordTokens);
+    wordTokens = removeStopWords(stopWords, wordTokens);
 
     // 3. Verify words exits in dictionary
     verifyWordsDefined(wordTokens);
@@ -63,22 +65,36 @@ public class GameParser implements Parser {
       return command;
     }
 
-    // 5. If the first word is a verb fetch the corresponding patterns and their associated actions
+    // 5. If the first word is a verb fetch the corresponding actions
     if (dictionary.isVerb(wordTokens[0])) {
       try {
-        List<String> actionPatterns = dictionary.getActions(wordTokens[0]);
-        if (actionPatterns == null || actionPatterns.isEmpty()) {
+        List<String> actionList = dictionary.getActions(wordTokens[0]);
+        if (actionList == null || actionList.isEmpty()) {
           command.errorMessage = "Invalid action";
         } else {
-          for (String pattern : actionPatterns) {
-            if (pattern != null || !pattern.isEmpty()) {
-              if (match(wordTokens, pattern)) {
-                // TODO: set action id in command
-                // command.action = ??
-
-                disambiguateNounWords(wordTokens);
-                break; // No need to try other patterns
+          for (String action : actionList) {
+              //Get the patterns for this action from Grammar
+              if (action != null || !action.isEmpty()) {
+                  List<String> patternList = grammar.getPatterns(action);
+              if (patternList == null || patternList.isEmpty()) 
+              {
+                  command.errorMessage = "Invalid action";
+              } 
+              else 
+              {
+                  for (String pattern : patternList) {
+                      if (match(wordTokens, pattern)) {
+                          command.action = action;
+                          disambiguateNounWords(wordTokens);
+                          break; // No need to try other patterns
+                      }
+                  }
               }
+              if((command.action != null && !"".equals(command.action)) 
+                   || !command.errorMessage.equals(""))
+                  //If there is error or the action is determined 
+                  //then no need to proceed with other actions
+                  break;
             }
           }
         }
@@ -122,9 +138,19 @@ public class GameParser implements Parser {
   /*
    * Removes any stop words such as articles and others ??
    */
-  private void removeStopWords(String[] stopWords, String[] wordTokenList) {
-    if(stopWords == null || stopWords.length == 0 || wordTokenList == null || wordTokenList.length == 0)
-        return;
+  public String[] removeStopWords(String[] stopWords, String[] wordTokenList) {
+    if(stopWords == null || stopWords.length == 0)
+        return wordTokenList;
+    else if (wordTokenList == null || wordTokenList.length == 0)
+        return null;
+    
+    //Create a list to make easy to remove and resize the array
+    List<String> wordList = new ArrayList<>(Arrays.asList(wordTokenList));
+    for(String sWord: stopWords)
+    {
+        wordList.removeAll(Arrays.asList(sWord));
+    }    
+    return wordList.toArray(new String[0]);
   }
 
   /*
