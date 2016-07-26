@@ -46,12 +46,17 @@ public class GameParser implements Parser {
 
     // 1. Tokenize words
     String[] wordTokens = tokenizeWords(userInput);
-    if (!command.errorMessage.equals("")) {
-      return command;
+    if (wordTokens == null || wordTokens.length == 0) {
+        command.errorMessage = "Invalid Input";
+        return command;
     }
 
     // 2. Remove stop words
     wordTokens = removeStopWords(stopWords, wordTokens);
+    if(wordTokens == null || wordTokens.length <= 0){
+        command.errorMessage = "Invalid Input";
+        return command;
+    }
 
     // 3. Verify words exits in dictionary
     verifyWordsDefined(wordTokens);
@@ -59,10 +64,12 @@ public class GameParser implements Parser {
       return command;
     }
 
-    // 4. Verify if the first word is a direction or verb
-    Boolean isDirectionOrVerb = verifyDirectionOrVerb(wordTokens[0]);
-    if (!command.errorMessage.equals("")) {
-      return command;
+    // 4. Verify if the first word is a verb
+    //In this release we are assumming that direction will be
+    //preceeded by verb 'go'
+    if(!dictionary.isVerb(wordTokens[0])){
+        command.errorMessage = "Invalid first word";
+        return command;
     }
 
     // 5. If the first word is a verb fetch the corresponding actions
@@ -163,12 +170,6 @@ public class GameParser implements Parser {
   }
 
   private Command disambiguateNounWords(String[] words) {
-    throw new UnsupportedOperationException("Not supported yet."); // To change body of generated
-                                                                   // methods, choose Tools |
-                                                                   // Templates.
-  }
-
-  private Boolean verifyDirectionOrVerb(String firstWord) {
     throw new UnsupportedOperationException("Not supported yet."); // To change body of generated
                                                                    // methods, choose Tools |
                                                                    // Templates.
