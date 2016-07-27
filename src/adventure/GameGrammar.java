@@ -12,6 +12,8 @@ public class GameGrammar implements Grammar {
 
   private static final GameGrammar INSTANCE = new GameGrammar();
 
+  private final Dictionary dictionary = GameDictionary.getInstance();
+
   private GameGrammar() {}
 
   private Map<String, GameAction> actionMap = new HashMap<String, GameAction>();
@@ -64,6 +66,12 @@ public class GameGrammar implements Grammar {
 
 
       actionMap.put(gameAction.getId(), gameAction);
+
+      /**
+       * Add game action to Dictionary
+       * */
+
+       dictionary.addGameAction(gameAction);
 
     } else {
       throw new IllegalArgumentException("can not add null game action");
