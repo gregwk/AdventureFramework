@@ -113,4 +113,74 @@ public class GameParserTest {
         assertNotNull(op);
         assertEquals(true, op);
     }
+    
+     //Test match function when input matches with the pattern and contains one object
+    @Test
+    public void testParseForMatch2() {
+        System.out.println("parse");
+        String userInput = "abc";
+        GameParser instance = GameParser.getInstance();
+        Command result = instance.parse(userInput);
+        assertNotNull(result);
+        assertEquals("basket ball ", result.object1);
+    }
+
+    @Test
+    public void testMatchWithMatchingParameters2() {
+        System.out.println("parse");
+        String userInput = "";
+        GameParser instance = GameParser.getInstance();
+        
+        String[] wLIst = new String[]{"Examine","basket", "ball"};
+        String Pattern = "Examine (\\D*)";
+  
+        boolean op = instance.match(wLIst, Pattern);
+        assertNotNull(op);
+        assertEquals(true, op);
+    }
+    
+    //Test match function when input does not match with the pattern
+    @Test
+    public void testMatchWithoutMatchingParameters() {
+        System.out.println("parse");
+        String userInput = "";
+        GameParser instance = GameParser.getInstance();
+        
+        String[] wLIst = new String[]{"Put","basket", "ball","into","wooden","box"};
+        String Pattern = "Put (\\D*) in (\\D*)";
+  
+        boolean op = instance.match(wLIst, Pattern);
+        assertNotNull(op);
+        assertEquals(false, op);
+    }
+    
+    //Test match function when input does not match with the pattern
+    @Test
+    public void testMatchWithoutMatchingParameters2() {
+        System.out.println("parse");
+        String userInput = "";
+        GameParser instance = GameParser.getInstance();
+        
+        String[] wLIst = new String[]{"Put","basket", "ball"};
+        String Pattern = "Put (\\D*) in (\\D*)";
+  
+        boolean op = instance.match(wLIst, Pattern);
+        assertNotNull(op);
+        assertEquals(false, op);
+    }
+    
+    //Test match function when input matches with the pattern and contains no objects
+    @Test
+    public void testMatchWithoutMatchingParameters2() {
+        System.out.println("parse");
+        String userInput = "";
+        GameParser instance = GameParser.getInstance();
+        
+        String[] wLIst = new String[]{"Inventory"};
+        String Pattern = "Inventory";
+  
+        boolean op = instance.match(wLIst, Pattern);
+        assertNotNull(op);
+        assertEquals(true, op);
+    }
 }
