@@ -10,7 +10,9 @@ import java.util.Map;
 
 public class GameGrammar implements Grammar {
 
-  private static final Grammar INSTANCE = new GameGrammar();
+  private static final GameGrammar INSTANCE = new GameGrammar();
+
+  private final Dictionary dictionary = GameDictionary.getInstance();
 
   private GameGrammar() {}
 
@@ -65,6 +67,12 @@ public class GameGrammar implements Grammar {
 
       actionMap.put(gameAction.getId(), gameAction);
 
+      /**
+       * Add game action to Dictionary
+       * */
+
+       dictionary.addGameAction(gameAction);
+
     } else {
       throw new IllegalArgumentException("can not add null game action");
     }
@@ -75,6 +83,5 @@ public class GameGrammar implements Grammar {
   public boolean contains(String actionId) {
     return actionMap.containsKey(actionId);
   }
-
 
 }
