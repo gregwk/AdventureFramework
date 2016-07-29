@@ -89,7 +89,7 @@ public interface GameWorld {
    * @param prop
    * @return 
    */
-  public boolean containProperty(String objectId, String prop);
+  public boolean containsProperty(String objectId, String prop);
   
   /**
    * Removes the property from the object.  
