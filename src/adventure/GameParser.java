@@ -27,6 +27,9 @@ public class GameParser implements Parser {
 
   // Initialize instance variable of Grammar
   Grammar grammar = GameGrammar.getInstance();
+  
+  //Initialize instance of TreeGameWorld
+  GameWorld gameWorld = TreeGameWorld.getInstance();
 
   // Make GameParser a singleton class
   private static GameParser instance = new GameParser();
@@ -37,6 +40,10 @@ public class GameParser implements Parser {
     return instance;
   }
   
+  /**
+   * Reset the Parser instance so that any remnants from previous parse 
+   * invocation do not affect the current exection
+   */
   private void resetParser(){
       command = new Command();
       obj1NounWords = obj2NounWords = null;
@@ -44,7 +51,9 @@ public class GameParser implements Parser {
 
   @Override
   public Command parse(String userInput) {
-
+      
+    resetParser();
+    
     if (userInput == null || userInput.trim().isEmpty()) {
       command.errorMessage = "Empty Input";
 
@@ -95,14 +104,16 @@ public class GameParser implements Parser {
                           command.action = action;
                           //Disambiguate objects from noun words
                           if(obj1NounWords != null && obj1NounWords.length > 0){
-                            disambiguateNounWords(obj1NounWords);
+                            command.object1 
+                                        = disambiguateNounWords(obj1NounWords);
                             if (!command.errorMessage.equals("")) {
                                 return command;
                             }
                           }
                           
                           if(obj2NounWords != null && obj2NounWords.length > 0){
-                            disambiguateNounWords(obj2NounWords);
+                            command.object2 
+                                        = disambiguateNounWords(obj2NounWords);
                             if (!command.errorMessage.equals("")) {
                                 return command;
                             }
@@ -158,9 +169,9 @@ public class GameParser implements Parser {
 
   /**
    * Removes any stop words such as articles
-   * @param stopWords The array of String that are to be filtered from user input
-   * @param wordTokenList The user input from which the stop words are to be filtered
-   * @return The remaining array of Strings after stop words are filtered from wordTokenList
+   * @param stopWords The array of String to be filtered from user input
+   * @param wordTokenList User input from which stop words are to be filtered
+   * @return Return String array after filtering stop words from wordTokenList
    */
   public String[] removeStopWords(String[] stopWords, String[] wordTokenList) {
     if(stopWords == null || stopWords.length == 0)
@@ -177,8 +188,51 @@ public class GameParser implements Parser {
     return wordList.toArray(new String[0]);
   }
   
-    
-  private Command disambiguateNounWords(String[] nounWords) {
+  /**
+   * 
+   * @param nounWords
+   * @return 
+   */
+  private String disambiguateNounWords(String[] nounWords) {
+      //First verify that the words exist in dictionary
+      verifyWordsDefined(nounWords);
+      if (!command.errorMessage.equals("")) {
+        return "";
+      }
+     
+      /*
+      //Can we assume if there are more than 1 words in the input nounWords
+      //then the last word is always a noun?
+      //Then we can do something like this:
+      if(!dictionary.isNoun(nounWords[nounWords.length - 1])){
+          command.errorMessage = "Disambiguation Error";
+          return "";
+      }
+      
+      //How do I get game object Id list from dictionary??
+      List<String> gameObjectIdList = dictionary.getGameObjects(???);
+      
+      for(String gameObjectId: gameObjectIdList){
+          GameObject gameObj = gameWorld.getGameObject(gameObjectId);
+          //If the last word is noun then any words before it must be adjectives
+          //So check if all the words are adjectives of the object
+          
+          if(nounWords.length > 1){
+              boolean isValidNoun = true;
+              for(int i = 0; i < nounWords.length - 1; i++){
+                  if(!gameObj.containsAdjective(nounWords[i])){
+                      isValidNoun = false;
+                      break;
+                  }
+              }
+              if(!isValidNoun)
+                  continue;
+          }
+          
+          if(gameWorld.isInScope(gameObjectId))
+              return gameObjectId;
+      }
+      */
      throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
   
