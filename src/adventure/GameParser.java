@@ -36,6 +36,11 @@ public class GameParser implements Parser {
   public static GameParser getInstance() {
     return instance;
   }
+  
+  private void resetParser(){
+      command = new Command();
+      obj1NounWords = obj2NounWords = null;
+  }
 
   @Override
   public Command parse(String userInput) {
@@ -47,7 +52,7 @@ public class GameParser implements Parser {
     }
 
     // 1. Tokenize words
-    String[] wordTokens = tokenizeWords(userInput);
+    String[] wordTokens = tokenizeWords(userInput.toLowerCase());
     if (wordTokens == null || wordTokens.length == 0) {
         command.errorMessage = "Invalid Input";
         return command;
@@ -58,15 +63,9 @@ public class GameParser implements Parser {
     if(wordTokens == null || wordTokens.length <= 0){
         command.errorMessage = "Invalid Input";
         return command;
-    }
+    }    
 
-    // 3. Verify words exits in dictionary
-    verifyWordsDefined(wordTokens);
-    if (!command.errorMessage.equals("")) {
-      return command;
-    }
-
-    // 4. Verify if the first word is a verb
+    // 3. Verify if the first word is a verb
     //In this release we are assumming that direction will be
     //preceeded by verb 'go'
     if(!dictionary.isVerb(wordTokens[0])){
@@ -74,7 +73,7 @@ public class GameParser implements Parser {
         return command;
     }
 
-    // 5. If the first word is a verb fetch the corresponding actions
+    // 4. If the first word is a verb fetch the corresponding actions
     if (dictionary.isVerb(wordTokens[0])) {
       try {
         List<String> actionList = dictionary.getActions(wordTokens[0]);
@@ -94,7 +93,20 @@ public class GameParser implements Parser {
                   for (String pattern : patternList) {
                       if (match(wordTokens, pattern)) {
                           command.action = action;
-                          disambiguateNounWords(wordTokens);
+                          //Disambiguate objects from noun words
+                          if(obj1NounWords != null && obj1NounWords.length > 0){
+                            disambiguateNounWords(obj1NounWords);
+                            if (!command.errorMessage.equals("")) {
+                                return command;
+                            }
+                          }
+                          
+                          if(obj2NounWords != null && obj2NounWords.length > 0){
+                            disambiguateNounWords(obj2NounWords);
+                            if (!command.errorMessage.equals("")) {
+                                return command;
+                            }
+                          }
                           break; // No need to try other patterns
                       }
                   }
@@ -164,45 +176,60 @@ public class GameParser implements Parser {
     }    
     return wordList.toArray(new String[0]);
   }
-
-    private Command disambiguateNounWords(String[] words) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+  
     
-    public boolean match(String[] words, String pattern)
-    {
-        StringBuilder wordsString = new StringBuilder();
-        for (int i = 0; i < words.length; i++)
-        {
-            wordsString.append(words[i]);
-            wordsString.append(" ");
-        }
-        String Sentence = wordsString.toString();
-        Pattern patternToCheck = Pattern.compile(pattern,Pattern.CASE_INSENSITIVE);
-        Matcher matchedPattern = patternToCheck.matcher(Sentence);
-        
-        if(matchedPattern.find( ))
-        {
-           try
-            {
-                command.object1 = matchedPattern.group(1);
-                command.object2 = matchedPattern.group(2);
-       
-                return true;
-            }
-            catch(IndexOutOfBoundsException ex)
-            {
-                //System.out.println(ex.getMessage());
-                return true;
-            }
-        }
-        return false;
-    }
-  /*
-   * Verifies that all the words or group of words exits in the dictionary
+  private Command disambiguateNounWords(String[] nounWords) {
+     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
+  
+  /**
+   * 
+   * @param words Array of strings
+   * @param pattern
+   * @return Boolean indicating if the pattern matching was successful 
+   */
+  public boolean match(String[] words, String pattern)
+  {
+      //The pattern will not have regex in it so we need to convert it from
+      //human readable pattern to regex pattern.
+      //The assumption is that the pattern will have replacable words surrounded
+      //by braces {} - example: put {objec1} in {object2}
+      //So we need to replace {*} with (\\D*) or (\\w*)
+      String regexPattern = pattern.replaceAll("\\{(.*?)\\}", "(\\\\D*)");
+      
+      String Sentence = String.join(" ", words);
+      Pattern patternToCheck = Pattern.compile(regexPattern
+                                               ,Pattern.CASE_INSENSITIVE);
+      Matcher matchedPattern = patternToCheck.matcher(Sentence);
+      
+      if(matchedPattern.find( )){
+          int matchedGroup = matchedPattern.groupCount();
+          if(matchedGroup > 0){
+              //command.object1 = matchedPattern.group(1);
+              obj1NounWords = matchedPattern.group(1).split("\\s+");
+              if(matchedGroup == 2){
+                  //command.object2 = matchedPattern.group(2);
+                  obj2NounWords = matchedPattern.group(2).split("\\s+");
+              }
+          }
+          return true;
+          
+          //TODO: We need to capture and store the values in the original 
+          //      pattern, the values inside braces, {}. 
+          //      Example: put {thing} in {container}
+          //      As Dr. K mentioned in class, the pattern could be something
+          //      like this where the values in the braces are the properties
+          //      of the objects to be disambiguated. 
+      }
+      return false;
+  }
+    
+  /**
+   * Verifies that all the words or group of words exist in the dictionary
+   * @param words 
    */
   public void verifyWordsDefined(String[] words) {
-    if(words != null || words.length > 0){
+    if(words != null || words.length > 0){        
         for(String word : words){
             if(!dictionary.isDefined(word)){
                 command.errorMessage = String.format("%s is not defined.", word);

@@ -6,6 +6,7 @@
 package adventure;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -20,53 +21,38 @@ import static org.junit.Assert.*;
 public class GameParserTest {
     private final String[] stopWords = {"a", "an", "the"};
     
-    Dictionary mockDictionary = new Dictionary(){
-        @Override
-        public boolean isAdjective(String word) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public boolean isNoun(String word) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public boolean isVerb(String word) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public boolean isDefined(String word) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public List<String> getActions(String verb) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public List<String> getGameObjects(List<String> objectWords) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-        
-        @Override
-        public void addGameObject(GameObject object) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public void addGameAction(GameAction action) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-    };
+    private static Dictionary testDictionary;
     
     public GameParserTest() {
     }
     
     @BeforeClass
     public static void setUpClass() {
+        testDictionary = GameDictionary.getInstance();
+        
+        GameAction axnInsert = new GameAction("insert");
+        axnInsert.addPattern("put {thing} in {container}");
+        axnInsert.addPattern("insert {thing} in {container}");
+        testDictionary.addGameAction(axnInsert);
+        
+        GameAction axnPuton = new GameAction("puton");
+        axnPuton.addPattern("put {thing} on {surface}");
+        axnPuton.addPattern("put {thing} on top of {surface}");
+        testDictionary.addGameAction(axnPuton);
+        
+        GameObject objBall = new GameObject("ball");
+        objBall.addNoun("beach ball");
+        objBall.addAdjective("beach");
+        objBall.addAdjective("red");
+        objBall.addProperty("thing");
+        testDictionary.addGameObject(objBall);
+        
+        GameObject objBox = new GameObject("box");
+        objBox.addNoun("wooden box");
+        objBox.addAdjective("wooden");
+        objBox.addAdjective("brown");
+        objBox.addProperty("container");
+        testDictionary.addGameObject(objBox);
     }
     
     @AfterClass
@@ -94,8 +80,11 @@ public class GameParserTest {
         assertEquals("Empty Input", result.errorMessage);
     }
     
-    //Test match function when input matches with the pattern and contains two objects
-    @Test
+    /**
+     * Test match function when input matches with the pattern 
+     * and contains two objects
+     */
+    @Test (expected = NoSuchElementException.class)
     public void testParseForMatch() {
         System.out.println("parse");
         String userInput = "abc";
@@ -106,14 +95,17 @@ public class GameParserTest {
         assertEquals("basket box ", result.object2);
     }
 
+    /**
+     * 
+     */
     @Test
     public void testMatchWithMatchingParameters() {
         System.out.println("parse");
-        String userInput = "";
         GameParser instance = GameParser.getInstance();
         
-        String[] wLIst = new String[]{"Put","basket", "ball","in","basket","box"};
-        String Pattern = "Put (\\D*) in (\\D*)";
+        String[] wLIst = instance.tokenizeWords("Put basket ball in basket box");
+        //String Pattern = "Put (\\D*) in (\\D*)";
+        String Pattern = "Put {object} in {object}";
   
         boolean op = instance.match(wLIst, Pattern);
         assertNotNull(op);
@@ -121,7 +113,33 @@ public class GameParserTest {
     }
     
     /**
-     * Test of tokenizeWord with multi-worded unser input
+     * Test of tokenizeword method with empty user input
+     */
+    @Test
+    public void testTokenizeEmptyString(){
+        System.out.println("tokenize");
+        String userInput = "";
+        GameParser instance = GameParser.getInstance();
+        String[] result = instance.tokenizeWords(userInput);
+        assertNull(result);
+    }
+    
+    /**
+     * Test of tokenizeWord method with single word
+     */
+    @Test
+    public void testTokenizeSingleWordUserInput(){
+        System.out.println("tokenize");
+        String userInput = "Test";
+        GameParser instance = GameParser.getInstance();
+        String[] result = instance.tokenizeWords(userInput);
+        assertNotNull(result);
+        assertEquals(1, result.length);
+        assertEquals("Test", result[0]);
+    }
+    
+    /**
+     * Test of tokenizeWord with multi-worded user input
      */
     @Test
     public void testTokenizeMultipleWordUserInput(){
@@ -245,5 +263,51 @@ public class GameParserTest {
         assertEquals("ball", wordTokens[1]);
         assertEquals("in", wordTokens[2]);
         assertEquals("box", wordTokens[3]);
+    }
+    
+    /**
+     * Verify Dictionary correctly returns if a word is a verb
+     */
+    @Test
+    public void testWordExistsInDictionary(){
+        assertTrue(testDictionary.isDefined("ball"));
+        assertTrue(testDictionary.isDefined("box"));
+    }
+    
+    /**
+     * Verify Dictionary correctly returns if a word is a noun
+     */
+    public void testWordIsNounInDictionary(){
+        assertTrue(testDictionary.isNoun("beach ball"));
+        assertTrue(testDictionary.isNoun("wooden ball"));
+    }
+    
+    /**
+     * Verify Dictionary correctly returns if a word is an adjective
+     */
+    public void testWordIsAdjectiveInDictionary(){
+        assertTrue(testDictionary.isAdjective("beach"));
+        assertTrue(testDictionary.isAdjective("red"));
+        assertTrue(testDictionary.isAdjective("brown"));
+        assertTrue(testDictionary.isAdjective("wooden"));
+    }
+    
+    /**
+     * Verify Dictionary correctly returns if a word is a verb
+     * This should fail once GameDictionary correctly implements isVerb
+     */
+    @Test(expected = NoSuchElementException.class)
+    public void testWordIsVerbInDictionary(){
+        assertTrue(testDictionary.isVerb("put"));
+    }
+    
+    /**
+     * Verify Dictionary correctly returns actions associated with a verb
+     * This should fail once GameDictionary correctly implements getActions
+     */
+    @Test(expected = NoSuchElementException.class)
+    public void tesActionsAreReturntedByDictionary(){
+        assertNotNull(testDictionary.getActions("put"));
+        assertNotEquals(0, testDictionary.getActions("put").size());
     }
 }
