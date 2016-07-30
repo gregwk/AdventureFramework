@@ -41,9 +41,6 @@ public class GameDictionaryTest {
 		dictionary.addGameAction(gameact);
 		dictionary.addGameAction(gameact1);
 		dictionary.addGameAction(gameact2);
-		if(!grammar.contains(gameact.getId()))	grammar.addGameAction(gameact);
-		if(!grammar.contains(gameact1.getId()))	grammar.addGameAction(gameact1);
-		if(!grammar.contains(gameact2.getId()))	grammar.addGameAction(gameact2);
 		
 		GameObject gameobj = new Thing("Box", "A box to hold things");
 		gameobj.addAdjective("large");
