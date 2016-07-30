@@ -90,7 +90,7 @@ public class TreeGameWorld implements GameWorld {
 	}
 
 	@Override
-	public boolean containProperty(String objectId, String prop) {
+	public boolean containsProperty(String objectId, String prop) {
 		// TODO Auto-generated method stub
 		return treeGameWorld.get(objectId).containsProperty(prop);
 	}
