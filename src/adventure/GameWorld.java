@@ -1,6 +1,11 @@
-
 package adventure;
 
+/**
+ * This interface represents all of the public operations that can be performed by the TreeGameWorld;
+ * author: Yeze
+ * 2016/07/28
+ * 
+ */
 public interface GameWorld {
 
   /**
@@ -56,11 +61,45 @@ public interface GameWorld {
   public GameObject getGameObject(String objectId);
   
   /**
-   * Adds the specified object to the game world.
+   * Adds the specified Thing to the game world.
    * 
-   * @param obj the game object ot be added
+   * @param obj
    */
-  public void addGameObject(GameObject obj);
+  public void addThing(Thing thing);
+  
+  /**
+   * Adds the specified Room to the game world.
+   * 
+   * @param obj
+   */
+  public void addRoom(Room room); 
+  
+  /**
+   * Adds the property to object. 
+   * 
+   * @param objectId
+   * @param prop
+   */
+  public void addProperty(String objectId, String prop);
+  
+  /**
+   * If the object contains the property.  
+   * 
+   * @param objectId
+   * @param prop
+   * @return 
+   */
+  public boolean containsProperty(String objectId, String prop);
+  
+  /**
+   * Removes the property from the object.  
+   * 
+   * @param objectId
+   * @param prop
+   */
+  public void removeProperty(String objectId, String prop);
   
 }
+
+
 

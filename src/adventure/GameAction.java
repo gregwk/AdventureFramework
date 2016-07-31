@@ -11,6 +11,7 @@ public class GameAction {
   
   private String id;
   private List<String> patterns;
+  private Responder responder;
 
   public GameAction(String id) {
     if (id == null || id.trim().isEmpty()) {
@@ -37,4 +38,12 @@ public class GameAction {
     return patterns;
   }
 
+
+    public Responder getResponder() {
+        return responder;
+    }
+
+    public void setResponder(Responder responder) {
+        this.responder = responder;
+    }
 }
