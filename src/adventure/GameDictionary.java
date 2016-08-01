@@ -53,9 +53,8 @@ public class GameDictionary implements Dictionary {
 	/*
 	 * helper to return first word in string
 	 */
-	private String parseVerb(String Line){
-		String[] result = Line.split("\\s");
-		return result[0];
+	private String[] parseWord(String Line){
+		return Line.split("\\s");
 	}
 
 	// public methods
@@ -94,8 +93,13 @@ public class GameDictionary implements Dictionary {
 			throw new NullPointerException("Dictionary.isVerb: supplied word is null");
 		} else {
 			if(!isDefined(word)) throw new NoSuchElementException("Dictionary.isVerb: word is not defined");
-						VerbWord v = VWs.get(Collections.binarySearch(VWs, new VerbWord(word),VWcomp));
-			return v.getVerb().equals(word);
+
+			int idx = Collections.binarySearch(VWs, new VerbWord(word),VWcomp);
+			if(idx<0) return false;
+			else {
+				VerbWord v = VWs.get(idx);
+				return v.getVerb().equals(word);
+			}
 		}
 	}
 
@@ -111,7 +115,7 @@ public class GameDictionary implements Dictionary {
 		});
 
 		for(VerbWord G: VWs){
-			found = found || G.getVerb().equals(word);	// check word if a verb
+			found = found || G.getVerb().equals(word) || G.containsPrep(word);	// check word if a verb
 			if(found) return true;	// return true when found, conclude for loop
 		}
 
@@ -147,13 +151,24 @@ public class GameDictionary implements Dictionary {
 			if(!grammar.contains(action.getId())) grammar.addGameAction(action);
 			
 			for(String p: action.getPatterns()){
-				VerbWord verb = new VerbWord(parseVerb(p));
+				VerbWord verb = new VerbWord(parseWord(p)[0]);
 				if(!VWs.contains(verb)){
 					verb.addId(action.getId());
 					VWs.add(verb);
 				} else {
 					int idx = Collections.binarySearch(VWs, verb, VWcomp);
-					VWs.get(idx).addId(action.getId());
+					verb = VWs.get(idx);
+					verb.addId(action.getId());
+				}
+				
+				for(String s : action.getPatterns()){
+					String[] prep = parseWord(s);
+					if(prep!=null){
+						for(String w:prep){
+							if(!w.contains("object")) 
+								verb.addPreposition(w);
+						}
+					}
 				}
 			}
 			VWs.sort(VWcomp); 	// sort so binary search works
@@ -174,7 +189,7 @@ public class GameDictionary implements Dictionary {
 				
 				List<String> p = GameGrammar.getInstance().getPatterns(id);
 				for(String x: p){
-					if(parseVerb(x).equals(verb)){
+					if(parseWord(x)[0].equals(verb)){
 						ap.addPattern(x);
 					}
 				}
@@ -191,24 +206,43 @@ public class GameDictionary implements Dictionary {
 		if(objectWords == null){ // throw exception if argument is null
 			throw new NullPointerException("Dictionary.getGameObjects: Supplied objectWords list is null");
 		} else {
-			List<String> objIDs = new ArrayList<String>();
+			List<GameObject> firstobjIDs = new ArrayList<GameObject>(); // first iteration to get noun objects
+			List<String> objIDs = new ArrayList<String>();	// final list with adjectives to the nouns
+			List<String> innouns = new ArrayList<String>();	// collect nouns in incoming list
+			List<String> inadjs = new ArrayList<String>();	// collect adjectives in incoming list
 			for(String s : objectWords){
 				if(s == null){
 					throw new NullPointerException("Dictionary.getGameObjects: Supplied objectWords list contains a null element");
+				} else if(!isDefined(s)) {	// throw exception if the list doesn't contain a word
+						throw new NoSuchElementException("Dictionary.getGameObjects: GameObject list contains no such element");
+				} else if(isNoun(s)){
+					innouns.add(s);
+				} else if(isAdjective(s)){
+					inadjs.add(s);
+				}
+				    		
+			}
+			
+			for(String s: innouns){
+				for(GameObject G: GOs){
+					if(G.containsNoun(s)){
+						firstobjIDs.add(G);
+					}
+				}
+			}
+			
+			for(GameObject g : firstobjIDs){
+				if(inadjs.size()==0) {
+					if(!objIDs.contains(g.getId())) objIDs.add(g.getId());
 				} else {
-					boolean found = false;	// flag to determine if word was found in the GameObject list
-					for(GameObject G: GOs){
-						if(G.containsAdjective(s) || G.containsNoun(s)){
-							objIDs.add(G.getId());
-							found = true;	// object found in list
+					for(String a:inadjs){
+						if(g.containsAdjective(a)){
+							if(!objIDs.contains(g.getId())) objIDs.add(g.getId());
 						}
 					}
-
-					if(!found) {	// throw exception if the list doesn't contain a word
-						throw new NoSuchElementException("Dictionary.getGameObjects: GameObject list contains no such element");
-					}
-				}    		
+				}
 			}
+			
 			return objIDs;
 		}
 	}
@@ -218,7 +252,11 @@ public class GameDictionary implements Dictionary {
 		if(object == null){
 			throw new NullPointerException("Dictionary.addGameObject: Supplied object is null");
 		} else {
-			GOs.add(object);
+			boolean found = false;
+			for(GameObject g : GOs){
+				if(g.getId().equals(object.getId())) found = true;
+			}
+			if(!found) GOs.add(object);
 		}
 
 	}
@@ -226,10 +264,12 @@ public class GameDictionary implements Dictionary {
 	private class VerbWord implements Comparable<VerbWord> {
 		private String Verb;
 		private List<String> ids;
+		private List<String> preps; // preposition words
 
 		public VerbWord(String word){
 			Verb = word;
 			ids = new ArrayList<String>();
+			preps = new ArrayList<String>();
 		}
 		
 		public String getVerb(){
@@ -240,6 +280,16 @@ public class GameDictionary implements Dictionary {
 			if(!ids.contains(Id)){
 				ids.add(Id);		  
 			}
+		}
+		
+		public void addPreposition(String prep){
+			if(!preps.contains(prep)){
+				preps.add(prep);
+			}
+		}
+		
+		public boolean containsPrep(String word){
+			return preps.contains(word);
 		}
 
 		public List<String> getIds(){
