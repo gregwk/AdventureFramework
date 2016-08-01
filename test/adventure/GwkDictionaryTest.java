@@ -8,7 +8,7 @@ import static org.junit.Assert.*;
 import java.util.Arrays;
 import java.util.List;
 
-public class GwkGameDictionaryTest {
+public class GwkDictionaryTest {
 
 	private GameAction insert;
 	private GameAction puton;
