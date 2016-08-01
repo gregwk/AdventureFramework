@@ -75,6 +75,11 @@ public class Game {
 	  return rooms;
   }
   
+  /**
+   * This method creates connections between rooms
+   * @param rooms a mapping of room IDs to rooms
+   * @param connectors a list of RoomConnector objects, representing the way that the rooms are connected
+   */
   private void initRoomDirections(Map<String, Room> rooms, RoomConnector...connectors)
   {
 	  for (RoomConnector connector : connectors)
@@ -83,12 +88,19 @@ public class Game {
 		  Room targetRoom = rooms.get(connector.getToRoom().getId());
 		  sourceRoom.addExit(connector.getFromToDescription(), targetRoom);
 		  
+		  //If the connection is bidirectional, add an inverse connection (target --> source_
 		  if (connector.isBidirectional())
 			  targetRoom.addExit(connector.getToFromDescription(), sourceRoom);
 	  }
   }
 
-  
+  /**
+   * This method creates a Thing object and adds it to the model of our game
+   * @param name the name of the Thing
+   * @param desc a description of the Thing. Can be null
+   * @param parentID The ID of the Thing's parent object. Can be null
+   * @return a newly-created Thing object
+   */
   private Thing addThingToModel(String name, String desc, String parentID)
   {
 	  Thing thing = null;
