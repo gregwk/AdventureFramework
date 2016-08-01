@@ -4,14 +4,6 @@ import java.util.Arrays;
 
 public class Message {
     
-    private static Message instance = new Message();
-    
-    private Message() {}
-    
-    public static Message getInstance() {
-	return instance;
-    }
-    
     // parser messages
     
     public static String parseEmptyMessage() {
