@@ -158,8 +158,23 @@ public class GameObject {
    * Adds the specified property to the game object.
    * @param property
    */
-  public void addProperty(String property) {
-    properties.add(property);
+  public void addProperty(String...props) 
+  {
+	  for (String prop : props)
+	  {
+		  this.properties.add(prop);
+	  }
+  }
+  
+  /**
+   * Adds the specified property to the game object.
+   * @param property
+   */
+  public void addProperty(GameProperty...gameProperties) {
+    for (GameProperty prop : gameProperties)
+    {
+    	this.properties.add(prop.getPropId());
+    }
   }
 
   /**

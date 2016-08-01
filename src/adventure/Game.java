@@ -24,10 +24,6 @@ public class Game {
   /* Hardcoded Game Model descriptions */
   private final static String GARAGE_ID = "musty_garage";
   private final static String KITCHEN_ID = "kitchen";
-  private final static String TAKABLE = "takable";
-  private final static String OPENABLE = "openable";
-  private final static String UNLOCKED = "unlocked";
-  private final static String LOCKED = "locked";
   
   public Game() {}
 
@@ -46,13 +42,13 @@ public class Game {
 	  Door garageToKitchenDoor = new Door("Kitchen Door", "This door connects the kitchen and the garage.");
 	  
 	  //Add locked door between garage and kitchen
-	  garageToKitchenDoor.addProperty(LOCKED);
+	  garageToKitchenDoor.addProperty(GameProperty.LOCKED, GameProperty.LOCKABLE);
 	  garage.addDoor("east", garageToKitchenDoor);
 	  kitchen.addDoor("west", garageToKitchenDoor);
 	  
-	  //Set the properties of the objects in the game
-	  key.addProperty(TAKABLE);
-	  toolbox.addProperty(OPENABLE);
+	  //Set the properties of the objects in the game. The key needs to be concealed until the toolbox is opened.
+	  key.addProperty(GameProperty.TAKABLE, GameProperty.CONCEALED);
+	  toolbox.addProperty(GameProperty.CONTAINER, GameProperty.OPENABLE);
 	  
 	  //Initialize the player
 	  Actor player = new Player("Alex");
