@@ -2,9 +2,9 @@ package adventure;
 
 import static org.junit.Assert.*;
 
-import java.util.Collection;
-
 import org.junit.Test;
+
+import adventure.*;
 
 public class GameObjectTest {
 
@@ -17,27 +17,24 @@ public class GameObjectTest {
 		assertTrue(object.getId().equals("first_object"));
 		
 		//Ensure that the adjectives and nouns are assigned correctly
-		assertTrue(object.getAdjectives().contains("first"));
-		assertTrue(object.getNouns().contains("object"));
-		assertTrue(object.getAdjectives().size() == 1);
-		assertTrue(object.getNouns().size() == 1);
+		assertTrue(object.containsAdjective("first"));
+		assertTrue(object.containsNoun("object"));
 		
 		//Ensure that the description was generated properly
 		assertTrue(object.getDescription().equals("It's a first object"));
 		
 		//Ensure that we can add adjectives and nouns
-		object.addAdjectives("cool", "fun");
-		assertTrue(object.getAdjectives().size() == 3);
-		assertTrue(object.getAdjectives().contains("cool"));
-		assertTrue(object.getAdjectives().contains("fun"));
+		assertTrue(object.containsAdjective("cool"));
+		assertTrue(object.containsAdjective("fun"));
 		
-		object.addNouns("Ball");
-		assertTrue(object.getNouns().contains("Ball"));
+		object.addNoun("Ball");
+		assertTrue(object.containsNoun("Ball"));
 	}
 	
 	@Test
 	public void roomTest()
 	{
+		
 		Room room = new Room("Dank Graveyard");
 		Room room2 = new Room("Creepy Cabin");
 		
@@ -46,12 +43,10 @@ public class GameObjectTest {
 		Door door = new Door("creaky door");
 		room2.addDoor(door.getId(), door);
 		
-		Collection<Room> exits = room.getAllExits();
-		assertTrue(exits.contains(room2));
-		exits = room2.getAllExits();
-		assertTrue(exits.contains(room));
+		assertTrue(room.containsExit("east"));
 		
 		assertTrue(room2.containsDoor(door.getId()));
+		
 	}
 
 }

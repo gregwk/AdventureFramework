@@ -21,6 +21,8 @@ public class TreeGameWorld implements GameWorld {
 	private static final GameWorld INSTANCE = new TreeGameWorld();
 
 	private TreeGameWorld() {
+		treeGameWorld = new ListTree<String, GameObject>();
+		treeGameWorld.addRoot("root", new GameObject("ROOT"));
 	}
 
 	public static GameWorld getInstance() {
@@ -80,7 +82,7 @@ public class TreeGameWorld implements GameWorld {
 	@Override
 	public void addRoom(Room room) {
 		// TODO Auto-generated method stub
-		treeGameWorld.addRoot(room.getId(), room);
+		treeGameWorld.addChild(treeGameWorld.getRoot().key, room.getId(), room);
 	}
 
 	@Override
