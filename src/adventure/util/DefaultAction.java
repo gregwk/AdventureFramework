@@ -1,4 +1,4 @@
-package adventure.util.tree;
+package adventure.util;
 
 import adventure.*;
 
@@ -29,10 +29,26 @@ public class DefaultAction
 
     goAction.addPattern("go {direction}");
 
-    //TODO: add responder
+      Responder responder = (
+              command -> {
+
+                  // command.object1 holds direction
+                  if (!world.isInScope(command.object1)) {
+                      return new Response("message", "There is nothing in " + command.object1 + " direction");
+                  }
+
+                  return new Response("message", "Going towards "+ command.object1 + " direction");
+              }
+      );
+
+      goAction.setResponder(responder);
 
     return goAction;
   }
+
+    /**
+     * Examine game action
+     * */
 
     private GameAction getExamineAction()
     {
@@ -41,7 +57,26 @@ public class DefaultAction
         exAction.addPattern("x {object}");
         exAction.addPattern("look at {object}");
 
-        //TODO: add responder
+        Responder responder = (
+                command -> {
+
+                    if (!world.isInScope(command.object1)) {
+                        return new Response("message", command.object1 +" not in scope");
+                    }
+
+                    String description = world.getGameObject(command.object1).getDescription();
+
+
+                    if (description.isEmpty()) {
+                        return new Response("message", "");
+                    } else
+                    {
+                        return new Response("message", "You are looking at "+ description);
+                    }
+                }
+        );
+
+        exAction.setResponder(responder);
 
 
         return exAction;
@@ -60,19 +95,22 @@ public class DefaultAction
 
         Responder responder = (
                 command -> {
+
                     if (!world.isInScope(command.object1)) {
                         return new Response("message", command.object1 +" not in scope");
                     }
 
                     GameObject gameObject = world.getGameObject(command.object1);
 
-                    //TODO : is this object take-able?
-                   /* if(gameObject.isTakeable)
+                    if(!gameObject.containsProperty("takeable"))
                     {
+                        return new Response ("message", gameObject.getDescription() + " is not take able");
+                    }
 
-                    }*/
+                    /*//TODO: is already taken? where we are setting it? gameworld?*/
 
-                    String description = world.getGameObject(command.object1).getDescription();
+                    String description = gameObject.getDescription();
+
 
                     if (description.isEmpty()) {
                         return new Response("message", "");
