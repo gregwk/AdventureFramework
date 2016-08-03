@@ -8,9 +8,9 @@ package adventure;
  */
 public class Response {
   
-  private String kind;
+    public String kind;
 
-    private String message;
+    public String message;
 
 
     public Response(String kind, String message) {
