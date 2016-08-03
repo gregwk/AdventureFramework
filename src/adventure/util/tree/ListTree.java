@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public class ListTree<K, V> implements Tree<K, V> {
 
-    class Node {
+    public class Node {
         public K parent;
         public K key;
         public V value;
@@ -161,6 +161,11 @@ public class ListTree<K, V> implements Tree<K, V> {
         // reconnect to new parent
         Node pNode = map.get(parent);
         pNode.children.add(index, node);
+    }
+    
+    public Node getRoot()
+    {
+    	return root;
     }
     
 }
