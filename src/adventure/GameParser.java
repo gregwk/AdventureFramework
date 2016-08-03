@@ -182,46 +182,40 @@ public class GameParser implements Parser {
    * @return 
    */
   private String disambiguateNounWords(String[] nounWords) {
-      //First verify that the words exist in dictionary
-      verifyWordsDefined(nounWords);
-      if (!command.errorMessage.equals("")) {
-        return "";
-      }
-     
-      /*
+      
+      String phrase = String.join(" ", nounWords);
+      int wordCount = nounWords.length;
       //Can we assume if there are more than 1 words in the input nounWords
       //then the last word is always a noun?
       //Then we can do something like this:
       if(!dictionary.isNoun(nounWords[nounWords.length - 1])){
-          command.errorMessage = "Disambiguation Error";
-          return "";
+          command.errorMessage 
+            = Message.parseUnknownNounMessage(nounWords[wordCount - 1], phrase);
+          return null;
       }
       
-      //How do I get game object Id list from dictionary??
-      List<String> gameObjectIdList = dictionary.getGameObjects(???);
-      
-      for(String gameObjectId: gameObjectIdList){
-          GameObject gameObj = gameWorld.getGameObject(gameObjectId);
-          //If the last word is noun then any words before it must be adjectives
-          //So check if all the words are adjectives of the object
-          
-          if(nounWords.length > 1){
-              boolean isValidNoun = true;
-              for(int i = 0; i < nounWords.length - 1; i++){
-                  if(!gameObj.containsAdjective(nounWords[i])){
-                      isValidNoun = false;
-                      break;
-                  }
+      //Now verify all words preceeding noun are adjectives
+      if(nounWords.length > 1){
+          for(String adj : Arrays.copyOfRange(nounWords, 0, wordCount - 1)){
+              if(!dictionary.isAdjective(adj)){
+                  command.errorMessage 
+                          = Message.parseUnknownAdjectiveMessage(adj, phrase);
+                  return null;
               }
-              if(!isValidNoun)
-                  continue;
           }
-          
-          if(gameWorld.isInScope(gameObjectId))
-              return gameObjectId;
       }
-      */
-     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+      //Get game object Id list from
+      List<String> gameObjectIdList 
+                        = dictionary.getGameObjects(Arrays.asList(nounWords));
+      
+      for(String gameObjectId: gameObjectIdList){          
+          if(gameWorld.isInScope(gameObjectId)){
+              return gameObjectId;
+          }
+      }
+      
+      command.errorMessage = Message.parseUnknownPhraseMessage(phrase);
+      return null;
   }
   
   /**
