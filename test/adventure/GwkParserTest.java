@@ -21,8 +21,10 @@ public class GwkParserTest {
     private GameObject woodbox;
     private GameObject cardboardbox;
 
-    @Before
-    public void setup() throws Exception {
+//    @Before
+//    public void setup() throws Exception {
+    
+    public GwkParserTest() {
 	parser = GameParser.getInstance();
 	grammar = GameGrammar.getInstance();
 	dictionary = GameDictionary.getInstance();
