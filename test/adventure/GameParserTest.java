@@ -77,7 +77,7 @@ public class GameParserTest {
         GameParser instance = GameParser.getInstance();
         Command result = instance.parse(userInput);
         assertNotNull(result);
-        assertEquals("Empty Input", result.errorMessage);
+        assertEquals(Message.parseEmptyMessage(), result.errorMessage);
     }
     
     /**

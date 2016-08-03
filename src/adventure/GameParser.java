@@ -46,6 +46,7 @@ public class GameParser implements Parser {
    */
   private void resetParser(){
       command = new Command();
+      command.action = null;
       obj1NounWords = obj2NounWords = null;
   }
 
@@ -55,7 +56,7 @@ public class GameParser implements Parser {
     resetParser();
     
     if (userInput == null || userInput.trim().isEmpty()) {
-      command.errorMessage = "Empty Input";
+      command.errorMessage = Message.parseEmptyMessage();
 
       return command;
     }
@@ -63,25 +64,22 @@ public class GameParser implements Parser {
     // 1. Tokenize words
     String[] wordTokens = tokenizeWords(userInput.toLowerCase());
     if (wordTokens == null || wordTokens.length == 0) {
-        command.errorMessage = "Invalid Input";
+        command.errorMessage = Message.parseEmptyMessage();
         return command;
     }
 
     // 2. Remove stop words
     wordTokens = removeStopWords(stopWords, wordTokens);
     if(wordTokens == null || wordTokens.length <= 0){
-        command.errorMessage = "Invalid Input";
-        return command;
-    }    
-
-    // 3. Verify if the first word is a verb
-    //In this release we are assumming that direction will be
-    //preceeded by verb 'go'
-    if(!dictionary.isVerb(wordTokens[0])){
-        command.errorMessage = "Invalid first word";
+        command.errorMessage = Message.parseUnknownPhraseMessage(userInput);
         return command;
     }
-
+    
+    //3.Verify all the words exist
+    verifyWordsDefined(wordTokens);
+    
+    //In this release we are assumming that direction will be
+    //preceeded by verb 'go'
     // 4. If the first word is a verb fetch the corresponding actions
     if (dictionary.isVerb(wordTokens[0])) {
       try {
@@ -135,18 +133,8 @@ public class GameParser implements Parser {
         command.errorMessage = "System Exception: Error while retrieving patterns from dictionary";
       }
     } else {
-      // The first word is direction
-      // so the implicit verb is "go" and Object1 is the direction
-      command.action = "go";// TODO: this will eventually need to be retrieved from Dictionary
-      command.object1 = wordTokens[0];
-
-      // Here we need to check that there is no additional user input
-      // Can we just assume that if the length of the word token is more than 1 then it is error?
-      if (wordTokens.length > 1) {
-        command.errorMessage = "Invalid user input.";
-      }
-
-      return command;
+      // The set error that the first word is not verb   
+        command.errorMessage = Message.parseUnknownVerbMessage(wordTokens[0]);
     }
 
     return command;
@@ -283,13 +271,24 @@ public class GameParser implements Parser {
    * @param words 
    */
   public void verifyWordsDefined(String[] words) {
-    if(words != null || words.length > 0){        
+    if(words != null || words.length > 0){   
+        List<String> undefineWordList = new ArrayList<>();
         for(String word : words){
             if(!dictionary.isDefined(word)){
-                command.errorMessage = String.format("%s is not defined.", word);
-                return;
+                undefineWordList.add(word);
             }
         }
+        if(undefineWordList.size() > 0){
+            if(undefineWordList.size() == 1){
+                command.errorMessage
+                = Message.parseUndefinedWordMessage(undefineWordList.get(0));
+            }
+            else{
+                command.errorMessage
+                = Message.parseUndefinedWordsMessage(undefineWordList
+                                                   .toArray(new String[0]));
+            }
+        }        
     }
   }
 }
