@@ -113,7 +113,7 @@ public class GameParserTest {
     }
     
      //Test match function when input matches with the pattern and contains one object
-    @Test
+    @Test (expected = NoSuchElementException.class)
     public void testParseForMatch2() {
         System.out.println("parse");
         String userInput = "abc";
@@ -169,7 +169,7 @@ public class GameParserTest {
     
     //Test match function when input matches with the pattern and contains no objects
     @Test
-    public void testMatchWithoutMatchingParameters2() {
+    public void testMatchWithoutMatchingParameters3() {
         System.out.println("parse");
         String userInput = "";
         GameParser instance = GameParser.getInstance();
@@ -180,6 +180,7 @@ public class GameParserTest {
         boolean op = instance.match(wLIst, Pattern);
         assertNotNull(op);
         assertEquals(true, op);
+    }
     /**
      * Test of tokenizeword method with empty user input
      */
@@ -364,7 +365,7 @@ public class GameParserTest {
      * Verify Dictionary correctly returns if a word is a verb
      * This should fail once GameDictionary correctly implements isVerb
      */
-    @Test(expected = NoSuchElementException.class)
+    @Test
     public void testWordIsVerbInDictionary(){
         assertTrue(testDictionary.isVerb("put"));
     }
@@ -373,7 +374,7 @@ public class GameParserTest {
      * Verify Dictionary correctly returns actions associated with a verb
      * This should fail once GameDictionary correctly implements getActions
      */
-    @Test(expected = NoSuchElementException.class)
+    @Test
     public void tesActionsAreReturntedByDictionary(){
         assertNotNull(testDictionary.getActions("put"));
         assertNotEquals(0, testDictionary.getActions("put").size());
