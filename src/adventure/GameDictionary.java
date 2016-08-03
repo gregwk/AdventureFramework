@@ -161,7 +161,7 @@ public class GameDictionary implements Dictionary {
 					String[] prep = parseWord(s);
 					if(prep!=null){
 						for(String w:prep){
-							if( !w.contains("object") || !( w.startsWith("{") && w.endsWith("}") ) ) 
+							if( !w.contains("object") && !( w.startsWith("{") && w.endsWith("}") ) ) 
 								verb.addPreposition(w);
 						}
 					}
