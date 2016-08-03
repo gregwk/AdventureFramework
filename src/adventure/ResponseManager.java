@@ -30,19 +30,21 @@ public class ResponseManager {
 		if (!"".equals(response.kind)) return response;
 		
 		// get the primary object (if any) from the command
-		String obj1 = command.object1();
-		response = processResponse(command, obj1.getResponder());
+		GameObject gameObject = world.getGameObject(command.object1);
+		
+		response = processResponse(command, gameObject.getResponder());
 		if (!"".equals(response.kind)) return response;
 
 		// if all else fails, get the action's default response
-		String action = command.action();
-		response = processResponse(command, action.getResponder());
+		GameAction gameAction = new GameAction(command.action);
+		response = processResponse(command, gameAction.getResponder());
 		return response;
 		
 	}
 
 	private Response processResponse(Command command, Responder responder) {
-		Response result = responder.getResponse(Command command);
+		Response result = responder.getResponse(command);
+		return result;
 	}
 	
   
