@@ -22,23 +22,25 @@ public class GameParserTest {
     private final String[] stopWords = {"a", "an", "the"};
     
     private static Dictionary testDictionary;
+    private static Grammar testGrammar;
     
     public GameParserTest() {
     }
     
     @BeforeClass
     public static void setUpClass() {
+        testGrammar = GameGrammar.getInstance();
         testDictionary = GameDictionary.getInstance();
         
         GameAction axnInsert = new GameAction("insert");
         axnInsert.addPattern("put {thing} in {container}");
         axnInsert.addPattern("insert {thing} in {container}");
-        testDictionary.addGameAction(axnInsert);
+        testGrammar.addGameAction(axnInsert);
         
         GameAction axnPuton = new GameAction("puton");
         axnPuton.addPattern("put {thing} on {surface}");
-        axnPuton.addPattern("put {thing} on top of {surface}");
-        testDictionary.addGameAction(axnPuton);
+        axnPuton.addPattern("put {thing} onto {surface}");
+        testGrammar.addGameAction(axnPuton);
         
         GameObject objBall = new GameObject("ball");
         objBall.addNoun("beach ball");
@@ -53,6 +55,26 @@ public class GameParserTest {
         objBox.addAdjective("brown");
         objBox.addProperty("container");
         testDictionary.addGameObject(objBox);
+        
+        GameAction drop = new GameAction("drop");
+	drop.addPattern("drop {object}");
+	testGrammar.addGameAction(drop);
+
+	GameAction jump = new GameAction("jump");
+	jump.addPattern("jump");
+	testGrammar.addGameAction(jump);
+
+	GameObject beachball = new Thing("beach ball");
+	testDictionary.addGameObject(beachball);
+
+	GameObject soccerball = new Thing("soccer ball");
+	testDictionary.addGameObject(soccerball);
+
+	GameObject woodbox = new Thing("wooden box");
+	testDictionary.addGameObject(woodbox);
+
+	GameObject cardboardbox = new Thing("cardboard box");
+	testDictionary.addGameObject(cardboardbox);
     }
     
     @AfterClass
@@ -379,4 +401,67 @@ public class GameParserTest {
         assertNotNull(testDictionary.getActions("put"));
         assertNotEquals(0, testDictionary.getActions("put").size());
     }
+    
+    //Tests copied from Dr K Parser Test    
+
+    @Test
+    public void testEmpty() {
+	Command command = GameParser.getInstance().parse(" ");
+	assertNull(command.action);
+	assertNull(command.object1);
+	assertNull(command.object2);
+	assertEquals(Message.parseEmptyMessage(), command.errorMessage);
+    }
+    
+    @Test
+    public void testUndefinedWord() {
+	Command command = GameParser.getInstance().parse("jump banana");
+	assertEquals(Message.parseUndefinedWordMessage("banana"), command.errorMessage);
+    }
+    
+    @Test
+    public void testUndefinedWords() {
+	Command command = GameParser.getInstance().parse("jump orange banana");
+	assertEquals(Message.parseUndefinedWordsMessage("orange", "banana"), command.errorMessage);
+    }
+    
+    @Test
+    public void testNonVerb() {
+	Command command = GameParser.getInstance().parse("cardboard box");
+	assertEquals(Message.parseUnknownVerbMessage("cardboard"), command.errorMessage);
+    }
+    
+    //@Test
+    public void testPutInvalidPattern() {
+	Command command = GameParser.getInstance().parse("put ball");
+	assertTrue(command.errorMessage.contains("put {object} in {object}"));
+	assertTrue(command.errorMessage.contains("put {object} on {object}"));
+	assertTrue(command.errorMessage.contains("put {object} onto {object}"));
+    }
+
+    @Test
+    public void testNonNoun() {
+	Command command = GameParser.getInstance().parse("drop cardboard");
+	assertEquals(Message.parseUnknownNounMessage("cardboard", "cardboard"), command.errorMessage);
+    }
+    
+    @Test
+    public void testNonNoun2() {
+	Command command = GameParser.getInstance().parse("drop wooden cardboard");
+	assertEquals(Message.parseUnknownNounMessage("cardboard", "wooden cardboard"), command.errorMessage);
+    }
+
+    @Test
+    public void testNonAdjective() {
+	Command command = GameParser.getInstance().parse("drop ball box");
+	assertEquals(Message.parseUnknownAdjectiveMessage("ball", "ball box"), command.errorMessage);
+    }
+    
+    @Test
+    public void testNonObject() {
+	Command command = GameParser.getInstance().parse("drop beach box");
+	assertEquals(Message.parseUnknownPhraseMessage("beach box"), command.errorMessage);
+    }
+    
+    //end of tests copied from Dr. K Parser Test
 }
