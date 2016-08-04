@@ -54,6 +54,9 @@ public class GameParser implements Parser {
   public Command parse(String userInput) {
       
     resetParser();
+    Boolean matchedPattern = false;
+    //Instatiate only if there is a compile time exception thrown
+    List<String> allPatterns = new ArrayList<String>();
     
     if (userInput == null || userInput.trim().isEmpty()) {
       command.errorMessage = Message.parseEmptyMessage();
@@ -100,6 +103,7 @@ public class GameParser implements Parser {
                   for (String pattern : patternList) {
                       if (match(wordTokens, pattern)) {
                           command.action = action;
+                          matchedPattern = true;
                           //Disambiguate objects from noun words
                           if(obj1NounWords != null && obj1NounWords.length > 0){
                             command.object1 
@@ -119,6 +123,7 @@ public class GameParser implements Parser {
                           break; // No need to try other patterns
                       }
                   }
+                  allPatterns.addAll(patternList);
               }
               if((command.action != null && !"".equals(command.action)) 
                    || !command.errorMessage.equals(""))
@@ -126,6 +131,9 @@ public class GameParser implements Parser {
                   //then no need to proceed with other actions
                   break;
             }
+          }
+          if(!matchedPattern){
+             command.errorMessage = Message.parseVerbPatternMessage(wordTokens[0], allPatterns);
           }
         }
       } catch (Exception ex) {
