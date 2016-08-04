@@ -1,7 +1,6 @@
 package adventure;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -94,12 +93,12 @@ public class GameDictionary implements Dictionary {
 		} else {
 			if(!isDefined(word)) throw new NoSuchElementException("Dictionary.isVerb: word is not defined");
 
-			int idx = Collections.binarySearch(VWs, new VerbWord(word),VWcomp);
-			if(idx<0) return false;
-			else {
-				VerbWord v = VWs.get(idx);
-				return v.getVerb().equals(word);
-			}
+			VerbWord verb = new VerbWord(word);
+			
+			if(VWs.contains(verb)) 
+				return VWs.get(VWs.indexOf(verb)).getVerb().equals(word); 
+			else return false;
+			
 		}
 	}
 
@@ -134,9 +133,8 @@ public class GameDictionary implements Dictionary {
 		
 		VerbWord search = new VerbWord(verb);
 
-		int idx = Collections.binarySearch(VWs, search, VWcomp);
-		if(VWs.get(idx).getVerb().equals(verb)){
-			AList.addAll(VWs.get(idx).getIds());
+		if(VWs.get(VWs.indexOf(search)).getVerb().equals(verb)){
+			AList.addAll(VWs.get(VWs.indexOf(search)).getIds());
 		}
 
 		return AList;
@@ -156,16 +154,14 @@ public class GameDictionary implements Dictionary {
 					verb.addId(action.getId());
 					VWs.add(verb);
 				} else {
-					int idx = Collections.binarySearch(VWs, verb, VWcomp);
-					verb = VWs.get(idx);
-					verb.addId(action.getId());
+					VWs.get(VWs.indexOf(verb)).addId(action.getId());
 				}
 				
 				for(String s : action.getPatterns()){
 					String[] prep = parseWord(s);
 					if(prep!=null){
 						for(String w:prep){
-							if(!w.contains("object")) 
+							if( !w.contains("object") && !( w.startsWith("{") && w.endsWith("}") ) ) 
 								verb.addPreposition(w);
 						}
 					}
@@ -182,7 +178,7 @@ public class GameDictionary implements Dictionary {
 		List<GameActionPattern> aps = new ArrayList<GameActionPattern>();
 		
 		if(isVerb(verb)){
-			VerbWord v = VWs.get(Collections.binarySearch(VWs, new VerbWord(verb),VWcomp));
+			VerbWord v = VWs.get(VWs.indexOf(new VerbWord(verb)));
 			
 			for(String id:v.getIds()){
 				GameActionPattern ap = new GameActionPattern(id);
