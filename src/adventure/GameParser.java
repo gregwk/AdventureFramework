@@ -55,7 +55,6 @@ public class GameParser implements Parser {
       
     resetParser();
     Boolean matchedPattern = false;
-    //Instatiate only if there is a compile time exception thrown
     List<String> allPatterns = new ArrayList<String>();
     
     if (userInput == null || userInput.trim().isEmpty()) {
