@@ -124,15 +124,12 @@ public class GameParser implements Parser {
                   }
                   allPatterns.addAll(patternList);
               }
-              if((command.action != null && !"".equals(command.action)) 
-                   || !command.errorMessage.equals(""))
-                  //If there is error or the action is determined 
-                  //then no need to proceed with other actions
-                  break;
             }
           }
           if(!matchedPattern){
-             command.errorMessage = Message.parseVerbPatternMessage(wordTokens[0], allPatterns);
+             command.errorMessage 
+                = Message.parseVerbPatternMessage(wordTokens[0], 
+                                            allPatterns.toArray(new String[0]));
           }
         }
       } catch (Exception ex) {

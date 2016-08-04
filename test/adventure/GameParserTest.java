@@ -431,12 +431,12 @@ public class GameParserTest {
 	assertEquals(Message.parseUnknownVerbMessage("cardboard"), command.errorMessage);
     }
     
-    //@Test
+    @Test
     public void testPutInvalidPattern() {
 	Command command = GameParser.getInstance().parse("put ball");
-	assertTrue(command.errorMessage.contains("put {object} in {object}"));
-	assertTrue(command.errorMessage.contains("put {object} on {object}"));
-	assertTrue(command.errorMessage.contains("put {object} onto {object}"));
+	assertTrue(command.errorMessage.contains("put {thing} in {container}"));
+	assertTrue(command.errorMessage.contains("insert {thing} in {container}"));
+	assertTrue(command.errorMessage.contains("put {thing} onto {surface}"));
     }
 
     @Test
