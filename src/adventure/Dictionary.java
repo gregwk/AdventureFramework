@@ -5,6 +5,11 @@ import java.util.List;
 public interface Dictionary {
 
   /**
+   * Clear the object to the state as of the constructor.
+   */
+  public void clear();
+	
+  /**
    * Returns true if the specified word is an adjective
    * 
    * @param word the word to determine if it is an Adjective
