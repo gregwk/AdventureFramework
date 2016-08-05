@@ -58,7 +58,26 @@ public class DefaultAction
         exAction.addPattern("x {object}");
         exAction.addPattern("look at {object}");
 
-        //TODO: add responder
+        Responder responder = (
+                command -> {
+                    if (!world.isInScope(command.object1)) {
+                        return new Response("message", command.object1 +" not in scope");
+                    }
+
+                    String description = world.getGameObject(command.object1).getDescription();
+
+
+                    if (description.isEmpty())
+                    {
+                        return new Response("message", "");
+                    } else
+                    {
+                        return new Response("message", "You are looking at "+ description);
+                    }
+                }
+        );
+
+        exAction.setResponder(responder);
 
 
         return exAction;
