@@ -3,8 +3,11 @@ package adventure;
 /**
  * @author SweetuPatel
  *
- *  updated By
+ * updated By
  * @author adeelahuma
+ * 
+ * updated By
+ * @author SweetuPatel
  */
 public class Response {
   
