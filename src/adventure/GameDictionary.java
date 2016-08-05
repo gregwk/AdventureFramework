@@ -58,6 +58,11 @@ public class GameDictionary implements Dictionary {
 
 	// public methods
 
+	public void clear(){
+		GOs.clear();
+		VWs.clear();
+	}
+	
 	@Override
 	public boolean isAdjective(String word) {
 		if(word == null) throw new NullPointerException("Dictionary.isAdjective: Supplied word is null");
