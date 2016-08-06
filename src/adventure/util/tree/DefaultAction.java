@@ -22,6 +22,7 @@ public class DefaultAction
         grammar.addGameAction(getGoGameAction());
         grammar.addGameAction(getExamineAction());
         grammar.addGameAction(getTakeGameAction());
+        grammar.addGameAction(getOpenGameAction());
     }
 
     /**
