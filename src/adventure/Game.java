@@ -16,9 +16,8 @@ import java.util.Set;
  * @author Alex_Lappy_486
  *
  */
-public class Game {
-  
-  private Dictionary dictionary = GameDictionary.getInstance();
+public class Game 
+{
   private GameWorld world = TreeGameWorld.getInstance();
 
   /* Hardcoded Game Model descriptions */
@@ -68,7 +67,7 @@ public class Game {
 	  {
 		  //Init room and add it to the Gameworld model
 		  Room r = new Room(s);
-		  addRoomToModel(r);
+		  world.addRoom(r);
 		  rooms.put(r.getId(),r);
 	  }
 	  
@@ -110,15 +109,8 @@ public class Game {
 		  thing = new Thing(name, desc);
 	  
 	  thing.setParent(parentID);
-	  this.dictionary.addGameObject(thing);
 	  this.world.addThing(thing);
 	  return thing;
-  }
-  
-  private void addRoomToModel(Room room)
-  {
-	  this.dictionary.addGameObject(room);
-	  this.world.addRoom(room);
   }
   
   public static void main(String[] args)
