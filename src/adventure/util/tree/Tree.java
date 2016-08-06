@@ -1,6 +1,10 @@
 
 package adventure.util.tree;
 
+import java.util.List;
+
+import adventure.GameObject;
+
 /**
  * A tree is a data structure that maintains the object values it holds in
  * the form of a rooted, ordered tree, whose nodes have unique keys.
@@ -150,5 +154,7 @@ public interface Tree <K, V> {
      *        greater than the number of children
 */
     public void moveSubTree(int index, K subtreeRoot, K parent);
+    
+    public List<V> getChildren(V Key);
  
 }

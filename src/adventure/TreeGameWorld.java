@@ -7,6 +7,8 @@
 
 package adventure;
 
+import java.util.List;
+
 import adventure.util.tree.ListTree;
 
 public class TreeGameWorld implements GameWorld {
@@ -101,6 +103,11 @@ public class TreeGameWorld implements GameWorld {
 	public void removeProperty(String objectId, String prop) {
 		// TODO Auto-generated method stub
 		treeGameWorld.get(objectId).removeProperty(prop);
+	}
+
+	@Override
+	public List<GameObject> getChildrenOfGameObject(String objectId) {
+		return treeGameWorld.getChildren(treeGameWorld.get(objectId));
 	}
 
 }
