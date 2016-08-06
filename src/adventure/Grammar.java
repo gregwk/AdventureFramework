@@ -36,4 +36,6 @@ public interface Grammar {
    */
   public boolean contains(String actionId);
 
+  public void clear();
+
 }

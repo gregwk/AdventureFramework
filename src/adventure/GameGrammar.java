@@ -84,4 +84,10 @@ public class GameGrammar implements Grammar {
     return actionMap.containsKey(actionId);
   }
 
+
+  @Override
+  public void clear(){
+    actionMap.clear();
+  }
+
 }
