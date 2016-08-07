@@ -2,7 +2,6 @@ package adventure;
 
 import java.util.List;
 
-import adventure.*;
 import adventure.util.tree.GameUtils;
 
 /**
@@ -23,7 +22,6 @@ public class DefaultAction
         grammar.addGameAction(getGoGameAction());
         grammar.addGameAction(getExamineAction());
         grammar.addGameAction(getTakeGameAction());
-        grammar.addGameAction(getOpenGameAction());
     }
 
     /**
@@ -36,9 +34,28 @@ public class DefaultAction
 
     goAction.addPattern("go {direction}");
 
-    //TODO: add responder
 
-    return goAction;
+      Responder responder = (
+              command -> {
+                  Actor player = world.getPlayer();
+
+                  Room room = world.getRoom(player.getId());
+
+
+                  if(room.containsExit(command.object1))
+                  {
+                      /*room.getExit().getId();
+                      world.move(player.getId(), );*/
+                  }
+
+
+                  return new Response("message", "you are in "+ command.object1);
+              }
+      );
+
+      goAction.setResponder(responder);
+
+      return goAction;
   }
 
     private GameAction getExamineAction()
@@ -48,7 +65,26 @@ public class DefaultAction
         exAction.addPattern("x {object}");
         exAction.addPattern("look at {object}");
 
-        //TODO: add responder
+        Responder responder = (
+                command -> {
+                    if (!world.isInScope(command.object1)) {
+                        return new Response("message", command.object1 +" not in scope");
+                    }
+
+                    String description = world.getGameObject(command.object1).getDescription();
+
+
+                    if (description.isEmpty())
+                    {
+                        return new Response("message", "");
+                    } else
+                    {
+                        return new Response("message", "You are looking at "+ description);
+                    }
+                }
+        );
+
+        exAction.setResponder(responder);
 
 
         return exAction;
@@ -67,26 +103,54 @@ public class DefaultAction
 
         Responder responder = (
                 command -> {
-                    if (!world.isInScope(command.object1)) {
-                        return new Response("message", command.object1 +" not in scope");
+                    Actor player = world.getPlayer();
+
+
+                    if(world.isInInventory(command.object1))
+                    {
+                        if (!world.isInScope(command.object1))
+                        {
+                            return new Response("message", command.object1 +" not in scope");
+                        }
+
+                        GameObject gameObject = world.getGameObject(command.object1);
+
+
+                        if(gameObject.containsProperty(GameProperty.TAKABLE.getPropId()))
+                        {
+
+                            if (gameObject instanceof Thing)
+                            {
+                                Thing thing = (Thing)gameObject;
+                                String parentKey = thing.getParent();
+
+                                GameObject parent = world.getGameObject(parentKey);
+
+                                if(parent.containsProperty("open"))
+                                {
+
+                                    world.move(command.object1, player.getId());
+
+                                    return new Response("message", "you have taken " + gameObject.getDescription());
+                                }
+                                else
+                                {
+                                    return new Response("message", "There is no such " + gameObject.getDescription());
+                                }
+                            }
+
+                        }
+                        else
+                        {
+                            return new Response("message", "There is no such "+ command.object1);
+                        }
+                    }
+                    else
+                    {
+                        return new Response("message", "you don't have any such "+ command.object1);
                     }
 
-                    GameObject gameObject = world.getGameObject(command.object1);
-
-                    //TODO : is this object take-able?
-                   /* if(gameObject.isTakeable)
-                    {
-
-                    }*/
-
-                    String description = world.getGameObject(command.object1).getDescription();
-
-                    if (description.isEmpty()) {
-                        return new Response("message", "");
-                    } else
-                    {
-                        return new Response("message", description);
-                    }
+                    return new Response("message", "you don't have any such "+ command.object1);
                 }
         );
 
@@ -160,5 +224,4 @@ public class DefaultAction
     {
     	return !world.isInScope(object.getId()) || object.containsProperty(GameProperty.CONCEALED);
     }
-
 }

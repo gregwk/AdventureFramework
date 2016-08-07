@@ -31,7 +31,11 @@ public class Room extends GameObject {
     return this.exits.remove(direction);
   }
   
-  public Room containsExit(String direction){
+  public boolean containsExit(String direction){
+	  return this.exits.containsKey(direction);
+  }
+  
+  public Room getExit(String direction){
 	  return this.exits.get(direction);
   }
 
