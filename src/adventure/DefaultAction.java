@@ -98,7 +98,13 @@ public class DefaultAction
     
     /**
      * This method initializes the "Open" game action. The algorithm is as follows:
-     * 
+     * 1. If the object is NOT in scope, return a "not-in-scope" message
+     * 2. If the object is not openable, return a "not openable" message
+     * 3. If the object is locked, return an "is locked" message
+     * 4. If 1-3 are false, then do the following:
+     *     a. If the object is a container, remove the "concealed" property from its children.
+     *     b. Add the "open" property to the container.
+     *     c. Return a message saying that the object is opened.
      * @return A GameAction representig the "Open" command
      */
     private GameAction getOpenGameAction()
