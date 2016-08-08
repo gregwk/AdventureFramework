@@ -102,7 +102,7 @@ public class TreeGameWorld implements GameWorld {
 		gameDic.addGameObject(room);
 	}
 
-	@Override
+//	@Override
 	public void addProperty(String objectId, GameProperty... props) {
 		// TODO Auto-generated method stub
 		gameTree.get(objectId).addProperty(props);
@@ -120,31 +120,31 @@ public class TreeGameWorld implements GameWorld {
 		gameTree.get(objectId).removeProperty(prop);
 	}
 	
-	@Override
-	public List<String> getGameObjects(List<String> objectWords){
-		// TODO Auto-generated method stub
-		return gameDic.getGameObjects(objectWords);
-	}
-	
-	@Override
-	public List<String> getActions(String verb){
-		// TODO Auto-generated method stub
-		return gameDic.getActions(verb);
-	}
-	
-	@Override
-	public void addGameAction(GameAction action) {
-		// TODO Auto-generated method stub
-		gameDic.addGameAction(action);
-	}
+//	@Override
+//	public List<String> getGameObjects(List<String> objectWords){
+//		// TODO Auto-generated method stub
+//		return gameDic.getGameObjects(objectWords);
+//	}
+//	
+//	@Override
+//	public List<String> getActions(String verb){
+//		// TODO Auto-generated method stub
+//		return gameDic.getActions(verb);
+//	}
+//	
+//	@Override
+//	public void addGameAction(GameAction action) {
+//		// TODO Auto-generated method stub
+//		gameDic.addGameAction(action);
+//	}
+//
+//	@Override
+//	public void addDirection(Direction direction) {
+//		// TODO Auto-generated method stub
+//		gameTree.addRoot(direction.getId(), direction);
+//	}
 
-	@Override
-	public void addDirection(Direction direction) {
-		// TODO Auto-generated method stub
-		gameTree.addRoot(direction.getId(), direction);
-	}
-
-	@Override
+//	@Override
 	public void clear() {
 		// TODO Auto-generated method stub
 		gameDic.clear();
@@ -152,7 +152,7 @@ public class TreeGameWorld implements GameWorld {
 		player = null;
 	}
 
-	@Override
+//	@Override
 	public List<String> getChildren(String objectId) {
 		// TODO Auto-generated method stub
 		List<GameObject> childrenGameObjects = gameTree.getChildren(objectId);
@@ -164,10 +164,22 @@ public class TreeGameWorld implements GameWorld {
 		return childrenIds;
 	}
 
-	@Override
+//	@Override
 	public String getParent(String objectId) {
 		// TODO Auto-generated method stub
 		return gameTree.parent(objectId);
+	}
+
+	@Override
+	public List<GameObject> getChildrenOfGameObject(String objectId) {
+	    // TODO Auto-generated method stub
+	    return null;
+	}
+
+	@Override
+	public void addProperty(String objectId, String prop) {
+	    // TODO Auto-generated method stub
+	    
 	}
 
 }

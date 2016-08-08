@@ -6,7 +6,14 @@ public class AdventureMain {
 	 
 		GameEngine engine = DefaultGameEngine.getInstance();
 		engine.initializeGame();
-		engine.run();
+		
+	        java.awt.EventQueue.invokeLater(new Runnable() {
+	            public void run() {
+	                new AdventureGUI(engine).setVisible(true);
+	            }
+	        });		
+		
+//		engine.run();
 		
 		 
 	}

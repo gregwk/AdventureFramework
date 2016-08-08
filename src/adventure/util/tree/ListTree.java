@@ -173,9 +173,27 @@ public class ListTree<K, V> implements Tree<K, V> {
     	return root;
     }
 
+//	@Override
+//	public List<V> getChildren(V Key) {
+//		Node parent = map.get(Key);
+//		List<Node> childrenNodes = parent.children;
+//		List<V> children = new ArrayList<V>();
+//		for (Node childNode : childrenNodes)
+//		{
+//			children.add(childNode.value);
+//		}
+//		return children;
+//	}
+    
 	@Override
-	public List<V> getChildren(V Key) {
-		Node parent = map.get(Key);
+	public void clear() {
+		// TODO Auto-generated method stub
+		map.clear();
+	}
+
+	@Override
+	public List<V> getChildren(K key) {
+		Node parent = map.get(key);
 		List<Node> childrenNodes = parent.children;
 		List<V> children = new ArrayList<V>();
 		for (Node childNode : childrenNodes)
@@ -183,11 +201,5 @@ public class ListTree<K, V> implements Tree<K, V> {
 			children.add(childNode.value);
 		}
 		return children;
-	}
-    
-	@Override
-	public void clear() {
-		// TODO Auto-generated method stub
-		map.clear();
 	}
 }

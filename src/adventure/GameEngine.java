@@ -12,6 +12,6 @@ public interface GameEngine {
 
   public String processInput(String input);
 
-  public void run();
+  // public void run();
 
 }

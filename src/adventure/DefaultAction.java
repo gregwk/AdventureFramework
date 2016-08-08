@@ -1,8 +1,8 @@
 package adventure;
 
-import java.util.List;
-
 import adventure.util.tree.GameUtils;
+
+import java.util.List;
 
 /**
  * @author adeelahuma
@@ -13,15 +13,18 @@ public class DefaultAction
 {
     private Grammar grammar = GameGrammar.getInstance();
     private GameWorld world = TreeGameWorld.getInstance();
+
     private static final String OPEN = "open";
     private static final String TAKE = "take";
     private static final String GO = "go";
+    private static final String EXAMINE = "examine";
 
     public void initialize()
     {
         grammar.addGameAction(getGoGameAction());
         grammar.addGameAction(getExamineAction());
         grammar.addGameAction(getTakeGameAction());
+        grammar.addGameAction(getOpenGameAction());
     }
 
     /**
@@ -44,12 +47,15 @@ public class DefaultAction
 
                   if(room.containsExit(command.object1))
                   {
-                      /*room.getExit().getId();
-                      world.move(player.getId(), );*/
+                      Room exitRoom = room.getExit(command.object1);
+                      world.move(player.getId(),exitRoom.getId());
+
+                      return new Response("message", "you are in "+ exitRoom.getName());
                   }
-
-
-                  return new Response("message", "you are in "+ command.object1);
+                  else
+                  {
+                      return new Response("message", "There is nothing in "+ command.object1 + " direction");
+                  }
               }
       );
 
@@ -67,11 +73,15 @@ public class DefaultAction
 
         Responder responder = (
                 command -> {
-                    if (!world.isInScope(command.object1)) {
-                        return new Response("message", command.object1 +" not in scope");
+
+                    GameObject gameObject = world.getGameObject(command.object1);
+
+                    if(!objectIsInScope(world, gameObject))
+                    {
+                        return new Response("message", "There is no such "+ command.object1);
                     }
 
-                    String description = world.getGameObject(command.object1).getDescription();
+                    String description = gameObject.getDescription();
 
 
                     if (description.isEmpty())
@@ -105,39 +115,21 @@ public class DefaultAction
                 command -> {
                     Actor player = world.getPlayer();
 
+                    GameObject gameObject = world.getGameObject(command.object1);
+
 
                     if(world.isInInventory(command.object1))
                     {
-                        if (!world.isInScope(command.object1))
+                        if (!objectIsInScope(world, gameObject))
                         {
-                            return new Response("message", command.object1 +" not in scope");
+                            return new Response("message", "There is no such "+ command.object1);
                         }
-
-                        GameObject gameObject = world.getGameObject(command.object1);
-
 
                         if(gameObject.containsProperty(GameProperty.TAKABLE.getPropId()))
                         {
 
-                            if (gameObject instanceof Thing)
-                            {
-                                Thing thing = (Thing)gameObject;
-                                String parentKey = thing.getParent();
-
-                                GameObject parent = world.getGameObject(parentKey);
-
-                                if(parent.containsProperty("open"))
-                                {
-
-                                    world.move(command.object1, player.getId());
-
-                                    return new Response("message", "you have taken " + gameObject.getDescription());
-                                }
-                                else
-                                {
-                                    return new Response("message", "There is no such " + gameObject.getDescription());
-                                }
-                            }
+                            world.move(command.object1, player.getId());
+                            return new Response("message", "you have taken " + gameObject.getDescription());
 
                         }
                         else
@@ -149,8 +141,6 @@ public class DefaultAction
                     {
                         return new Response("message", "you don't have any such "+ command.object1);
                     }
-
-                    return new Response("message", "you don't have any such "+ command.object1);
                 }
         );
 
@@ -159,7 +149,8 @@ public class DefaultAction
 
         return takeAction;
     }
-    
+
+
     /**
      * This method initializes the "Open" game action. The algorithm is as follows:
      * 1. If the object is NOT in scope, return a "not-in-scope" message
@@ -173,46 +164,46 @@ public class DefaultAction
      */
     private GameAction getOpenGameAction()
     {
-    	//Initialize the Game Action and its associated pattern
+        //Initialize the Game Action and its associated pattern
         GameAction takeAction = new GameAction(OPEN);
         takeAction.addPattern(OPEN+" {object}");
 
-        Responder responder = 
-        (
-        	command -> 
-        	{
-        		GameObject object1 = this.world.getGameObject(command.object1);
-        		
-        		if (objectIsInScope(world, object1)) 
-        			return getNotInScopeMessage(object1);
-        		else if (!object1.containsProperty(GameProperty.OPENABLE))
-        			return new Response("message", object1.getName()+" is not openable");
-        		else if (object1.containsProperty(GameProperty.LOCKED))
-        			return new Response("message", object1.getName()+" is locked");
-        		else //We passed all of the negative tests.
-        		{
-        			//If this object has children, make all of them visible
-        			if (object1.containsProperty(GameProperty.CONTAINER))
-        			{
-        				List<GameObject> children = world.getChildrenOfGameObject(object1.getId());
-        				GameUtils.removePropertiesFromGameObjects(children, GameProperty.CONCEALED);
-        			}
-        			
-        			//Mark the container as opened
-        			object1.addProperty(GameProperty.OPEN);
-        			return new Response("message", "You opened the "+object1.getName());
-        		}
-            }
-        );
+        Responder responder =
+                (
+                        command ->
+                        {
+                            GameObject object1 = this.world.getGameObject(command.object1);
+
+                            if (objectIsInScope(world, object1))
+                                return getNotInScopeMessage(object1);
+                            else if (!object1.containsProperty(GameProperty.OPENABLE.getPropId()))
+                                return new Response("message", object1.getName()+" is not openable");
+                            else if (object1.containsProperty(GameProperty.LOCKED.getPropId()))
+                                return new Response("message", object1.getName()+" is locked");
+                            else //We passed all of the negative tests.
+                            {
+                                //If this object has children, make all of them visible
+                                if (object1.containsProperty(GameProperty.CONTAINER.getPropId()))
+                                {
+                                    List<GameObject> children = world.getChildrenOfGameObject(object1.getId());
+                                    GameUtils.removePropertiesFromGameObjects(children, GameProperty.CONCEALED);
+                                }
+
+                                //Mark the container as opened
+                                object1.addProperty(GameProperty.OPEN.getPropId());
+                                return new Response("message", "You opened the "+object1.getName());
+                            }
+                        }
+                );
         takeAction.setResponder(responder);
         return takeAction;
     }
-    
+
     private Response getNotInScopeMessage(GameObject object)
     {
-    	return new Response("message", object.getName()+" not in scope");
+        return new Response("message", object.getName()+" not in scope");
     }
-    
+
     /**
      * An object is considered "in scope" if it is in the current room of the player AND
      * it is not marked as "concealed".
@@ -222,6 +213,21 @@ public class DefaultAction
      */
     private boolean objectIsInScope(GameWorld world, GameObject object)
     {
-    	return !world.isInScope(object.getId()) || object.containsProperty(GameProperty.CONCEALED);
+        boolean isInScope = true;
+
+        if (world.isInScope(object.getId()))
+        {
+            if(object.containsProperty(GameProperty.CONCEALED.getPropId())) // is object hidden
+            {
+                isInScope = false;
+            }
+        }
+        else
+        {
+            isInScope = false;
+        }
+
+        return isInScope;
     }
+
 }

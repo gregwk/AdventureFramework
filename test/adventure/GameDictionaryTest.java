@@ -110,26 +110,26 @@ public class GameDictionaryTest {
 		Assert.assertTrue(dictionary.isVerb("put"));		
 	}
 	
-	@Test
-	public void getActionPatterns(){
-		setObjs();
-		
-		List<String> testverbs = new ArrayList<String>();
-		testverbs.add("drop");
-		testverbs.add("put");
-		testverbs.add("insert");
-		
-		for(String s: testverbs){
-			for(GameActionPattern out : dictionary.getActionPatterns(s)){
-				for(String gaps: out.getPatterns()){
-					String[] tokens = gaps.split("\\s");
-					Assert.assertTrue(s.equals(tokens[0]));
-				}
-			}		
-		}
-		
-		
-	}
+//	@Test
+//	public void getActionPatterns(){
+//		setObjs();
+//		
+//		List<String> testverbs = new ArrayList<String>();
+//		testverbs.add("drop");
+//		testverbs.add("put");
+//		testverbs.add("insert");
+//		
+//		for(String s: testverbs){
+//			for(GameActionPattern out : dictionary.getActionPatterns(s)){
+//				for(String gaps: out.getPatterns()){
+//					String[] tokens = gaps.split("\\s");
+//					Assert.assertTrue(s.equals(tokens[0]));
+//				}
+//			}		
+//		}
+//		
+//		
+//	}
 	
 	
 }
