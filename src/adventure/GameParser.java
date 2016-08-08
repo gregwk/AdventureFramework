@@ -27,6 +27,9 @@ public class GameParser implements Parser {
 
   // Initialize instance variable of Grammar
   Grammar grammar = GameGrammar.getInstance();
+  
+  //Initialize instance of TreeGameWorld
+  GameWorld gameWorld = TreeGameWorld.getInstance();
 
   // Make GameParser a singleton class
   private static GameParser instance = new GameParser();
@@ -36,45 +39,50 @@ public class GameParser implements Parser {
   public static GameParser getInstance() {
     return instance;
   }
+  
+  /**
+   * Reset the Parser instance so that any remnants from previous parse 
+   * invocation do not affect the current exection
+   */
+  private void resetParser(){
+      command = new Command();
+      command.action = null;
+      obj1NounWords = obj2NounWords = null;
+  }
 
   @Override
   public Command parse(String userInput) {
-
+      
+    resetParser();
+    Boolean matchedPattern = false;
+    List<String> allPatterns = new ArrayList<String>();
+    
     if (userInput == null || userInput.trim().isEmpty()) {
-      command.errorMessage = "Empty Input";
+      command.errorMessage = Message.parseEmptyMessage();
 
       return command;
     }
 
     // 1. Tokenize words
-    String[] wordTokens = tokenizeWords(userInput);
+    String[] wordTokens = tokenizeWords(userInput.toLowerCase());
     if (wordTokens == null || wordTokens.length == 0) {
-        command.errorMessage = "Invalid Input";
+        command.errorMessage = Message.parseEmptyMessage();
         return command;
     }
 
     // 2. Remove stop words
     wordTokens = removeStopWords(stopWords, wordTokens);
     if(wordTokens == null || wordTokens.length <= 0){
-        command.errorMessage = "Invalid Input";
+        command.errorMessage = Message.parseUnknownPhraseMessage(userInput);
         return command;
     }
-
-    // 3. Verify words exits in dictionary
+    
+    //3.Verify all the words exist
     verifyWordsDefined(wordTokens);
-    if (!command.errorMessage.equals("")) {
-      return command;
-    }
-
-    // 4. Verify if the first word is a verb
+    
     //In this release we are assumming that direction will be
     //preceeded by verb 'go'
-    if(!dictionary.isVerb(wordTokens[0])){
-        command.errorMessage = "Invalid first word";
-        return command;
-    }
-
-    // 5. If the first word is a verb fetch the corresponding actions
+    // 4. If the first word is a verb fetch the corresponding actions
     if (dictionary.isVerb(wordTokens[0])) {
       try {
         List<String> actionList = dictionary.getActions(wordTokens[0]);
@@ -94,17 +102,34 @@ public class GameParser implements Parser {
                   for (String pattern : patternList) {
                       if (match(wordTokens, pattern)) {
                           command.action = action;
-                          disambiguateNounWords(wordTokens);
+                          matchedPattern = true;
+                          //Disambiguate objects from noun words
+                          if(obj1NounWords != null && obj1NounWords.length > 0){
+                            command.object1 
+                                        = disambiguateNounWords(obj1NounWords);
+                            if (!command.errorMessage.equals("")) {
+                                return command;
+                            }
+                          }
+                          
+                          if(obj2NounWords != null && obj2NounWords.length > 0){
+                            command.object2 
+                                        = disambiguateNounWords(obj2NounWords);
+                            if (!command.errorMessage.equals("")) {
+                                return command;
+                            }
+                          }
                           break; // No need to try other patterns
                       }
                   }
+                  allPatterns.addAll(patternList);
               }
-              if((command.action != null && !"".equals(command.action)) 
-                   || !command.errorMessage.equals(""))
-                  //If there is error or the action is determined 
-                  //then no need to proceed with other actions
-                  break;
             }
+          }
+          if(!matchedPattern){
+             command.errorMessage 
+                = Message.parseVerbPatternMessage(wordTokens[0], 
+                                            allPatterns.toArray(new String[0]));
           }
         }
       } catch (Exception ex) {
@@ -112,18 +137,8 @@ public class GameParser implements Parser {
         command.errorMessage = "System Exception: Error while retrieving patterns from dictionary";
       }
     } else {
-      // The first word is direction
-      // so the implicit verb is "go" and Object1 is the direction
-      command.action = "go";// TODO: this will eventually need to be retrieved from Dictionary
-      command.object1 = wordTokens[0];
-
-      // Here we need to check that there is no additional user input
-      // Can we just assume that if the length of the word token is more than 1 then it is error?
-      if (wordTokens.length > 1) {
-        command.errorMessage = "Invalid user input.";
-      }
-
-      return command;
+      // The set error that the first word is not verb   
+        command.errorMessage = Message.parseUnknownVerbMessage(wordTokens[0]);
     }
 
     return command;
@@ -146,9 +161,9 @@ public class GameParser implements Parser {
 
   /**
    * Removes any stop words such as articles
-   * @param stopWords The array of String that are to be filtered from user input
-   * @param wordTokenList The user input from which the stop words are to be filtered
-   * @return The remaining array of Strings after stop words are filtered from wordTokenList
+   * @param stopWords The array of String to be filtered from user input
+   * @param wordTokenList User input from which stop words are to be filtered
+   * @return Return String array after filtering stop words from wordTokenList
    */
   public String[] removeStopWords(String[] stopWords, String[] wordTokenList) {
     if(stopWords == null || stopWords.length == 0)
@@ -164,51 +179,113 @@ public class GameParser implements Parser {
     }    
     return wordList.toArray(new String[0]);
   }
-
-    private Command disambiguateNounWords(String[] words) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+  
+  /**
+   * 
+   * @param nounWords
+   * @return 
+   */
+  private String disambiguateNounWords(String[] nounWords) {
+      String phrase = String.join(" ", nounWords);
+      int wordCount = nounWords.length;
+      //Can we assume if there are more than 1 words in the input nounWords
+      //then the last word is always a noun?
+      //Then we can do something like this:
+      if(!dictionary.isNoun(nounWords[nounWords.length - 1])){
+          command.errorMessage 
+            = Message.parseUnknownNounMessage(nounWords[wordCount - 1], phrase);
+          return null;
+      }
+      
+      //Now verify all words preceeding noun are adjectives
+      if(nounWords.length > 1){
+          for(String adj : Arrays.copyOfRange(nounWords, 0, wordCount - 1)){
+              if(!dictionary.isAdjective(adj)){
+                  command.errorMessage 
+                          = Message.parseUnknownAdjectiveMessage(adj, phrase);
+                  return null;
+              }
+          }
+      }
+      //Get game object Id list from
+      List<String> gameObjectIdList 
+                        = dictionary.getGameObjects(Arrays.asList(nounWords));
+      
+      for(String gameObjectId: gameObjectIdList){          
+          if(gameWorld.isInScope(gameObjectId)){
+              return gameObjectId;
+          }
+      }
+      
+      command.errorMessage = Message.parseUnknownPhraseMessage(phrase);
+      return null;
+  }
+  
+  /**
+   * 
+   * @param words Array of strings
+   * @param pattern
+   * @return Boolean indicating if the pattern matching was successful 
+   */
+  public boolean match(String[] words, String pattern)
+  {
+      //The pattern will not have regex in it so we need to convert it from
+      //human readable pattern to regex pattern.
+      //The assumption is that the pattern will have replacable words surrounded
+      //by braces {} - example: put {objec1} in {object2}
+      //So we need to replace {*} with (\\D*) or (\\w*)
+      String regexPattern = pattern.replaceAll("\\{(.*?)\\}", "(\\\\D*)");
+      
+      String Sentence = String.join(" ", words);
+      Pattern patternToCheck = Pattern.compile(regexPattern
+                                               ,Pattern.CASE_INSENSITIVE);
+      Matcher matchedPattern = patternToCheck.matcher(Sentence);
+      
+      if(matchedPattern.find( )){
+          int matchedGroup = matchedPattern.groupCount();
+          if(matchedGroup > 0){
+              //command.object1 = matchedPattern.group(1);
+              obj1NounWords = matchedPattern.group(1).split("\\s+");
+              if(matchedGroup == 2){
+                  //command.object2 = matchedPattern.group(2);
+                  obj2NounWords = matchedPattern.group(2).split("\\s+");
+              }
+          }
+          return true;
+          
+          //TODO: We need to capture and store the values in the original 
+          //      pattern, the values inside braces, {}. 
+          //      Example: put {thing} in {container}
+          //      As Dr. K mentioned in class, the pattern could be something
+          //      like this where the values in the braces are the properties
+          //      of the objects to be disambiguated. 
+      }
+      return false;
+  }
     
-    public boolean match(String[] words, String pattern)
-    {
-        StringBuilder wordsString = new StringBuilder();
-        for (int i = 0; i < words.length; i++)
-        {
-            wordsString.append(words[i]);
-            wordsString.append(" ");
-        }
-        String Sentence = wordsString.toString();
-        Pattern patternToCheck = Pattern.compile(pattern,Pattern.CASE_INSENSITIVE);
-        Matcher matchedPattern = patternToCheck.matcher(Sentence);
-        
-        if(matchedPattern.find( ))
-        {
-           try
-            {
-                command.object1 = matchedPattern.group(1);
-                command.object2 = matchedPattern.group(2);
-       
-                return true;
-            }
-            catch(IndexOutOfBoundsException ex)
-            {
-                //System.out.println(ex.getMessage());
-                return true;
-            }
-        }
-        return false;
-    }
-  /*
-   * Verifies that all the words or group of words exits in the dictionary
+  /**
+   * Verifies that all the words or group of words exist in the dictionary
+   * @param words 
    */
   public void verifyWordsDefined(String[] words) {
-    if(words != null || words.length > 0){
+    if(words != null || words.length > 0){   
+        List<String> undefineWordList = new ArrayList<>();
         for(String word : words){
             if(!dictionary.isDefined(word)){
-                command.errorMessage = String.format("%s is not defined.", word);
-                return;
+                undefineWordList.add(word);
             }
         }
+        if(undefineWordList.size() > 0){
+            if(undefineWordList.size() == 1){
+                command.errorMessage
+                = Message.parseUndefinedWordMessage(undefineWordList.get(0));
+            }
+            else{
+                command.errorMessage
+                = Message.parseUndefinedWordsMessage(undefineWordList
+                                                   .toArray(new String[0]));
+            }
+        }        
     }
   }
 }

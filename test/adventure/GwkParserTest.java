@@ -21,13 +21,14 @@ public class GwkParserTest {
     private GameObject woodbox;
     private GameObject cardboardbox;
 
-//    @Before
-//    public void setup() throws Exception {
-    
-    public GwkParserTest() {
+    @Before
+    public void setup() throws Exception {
 	parser = GameParser.getInstance();
 	grammar = GameGrammar.getInstance();
 	dictionary = GameDictionary.getInstance();
+        
+        grammar.clear();
+        dictionary.clear();
 
 	insert = new GameAction("insert");
 	insert.addPattern("put {object} in {object}");
