@@ -148,6 +148,7 @@ public class ListTree<K, V> implements Tree<K, V> {
         origPNode.children.remove(node);
         // reconnect to new parent
         Node pNode = map.get(parent);
+        node.parent = pNode.key;
         pNode.children.add(node);
     }
 
@@ -163,6 +164,7 @@ public class ListTree<K, V> implements Tree<K, V> {
         origPNode.children.remove(node);
         // reconnect to new parent
         Node pNode = map.get(parent);
+        node.parent = pNode.key;
         pNode.children.add(index, node);
     }
     
@@ -183,4 +185,9 @@ public class ListTree<K, V> implements Tree<K, V> {
 		return children;
 	}
     
+	@Override
+	public void clear() {
+		// TODO Auto-generated method stub
+		map.clear();
+	}
 }
