@@ -1,5 +1,6 @@
 package adventure.util.tree;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -92,6 +93,8 @@ public class ListTree<K, V> implements Tree<K, V> {
         if (!map.containsKey(parent)) throw new IllegalArgumentException();        
         return map.get(parent).children.size();
     }
+    
+    
 
     @Override
     public V get(K key) {
@@ -167,5 +170,17 @@ public class ListTree<K, V> implements Tree<K, V> {
     {
     	return root;
     }
+
+	@Override
+	public List<V> getChildren(V Key) {
+		Node parent = map.get(Key);
+		List<Node> childrenNodes = parent.children;
+		List<V> children = new ArrayList<V>();
+		for (Node childNode : childrenNodes)
+		{
+			children.add(childNode.value);
+		}
+		return children;
+	}
     
 }

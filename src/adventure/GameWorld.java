@@ -1,5 +1,7 @@
 package adventure;
 
+import java.util.List;
+
 /**
  * This interface represents all of the public operations that can be performed by the TreeGameWorld;
  * author: Yeze
@@ -59,6 +61,8 @@ public interface GameWorld {
    * @return
    */
   public GameObject getGameObject(String objectId);
+  
+  public List<GameObject> getChildrenOfGameObject(String objectId);
   
   /**
    * Adds the specified Thing to the game world.

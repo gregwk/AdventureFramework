@@ -30,9 +30,13 @@ public class Room extends GameObject {
   public Room removeExit(String direction) {
     return this.exits.remove(direction);
   }
-
-  public boolean containsExit(String direction) {
-    return this.exits.containsKey(direction);
+  
+  public boolean containsExit(String direction){
+	  return this.exits.containsKey(direction);
+  }
+  
+  public Room getExit(String direction){
+	  return this.exits.get(direction);
   }
 
   public void addDoor(String direction, Door door) {
@@ -45,6 +49,11 @@ public class Room extends GameObject {
 
   public boolean containsDoor(String direction) {
     return this.doors.containsKey(direction);
+  }
+  
+  public Door getDoor(String doorID)
+  {
+	  return this.doors.get(doorID);
   }
 
 }

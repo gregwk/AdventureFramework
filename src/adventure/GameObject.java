@@ -7,14 +7,46 @@ import java.util.Set;
 
 public class GameObject {
 
+  /**
+   * A unique string representing the object
+   */
   private String id;
+  
+  /**
+   * The string to display when referenced by the Adventure Game GUI
+   */
   private String displayName;
+  
+  /**
+   * A description of the object. To be displayed in the GUI when appropriate
+   */
   private String description;
+  
+  /**
+   * A collection of adjectives describing the object
+   */
   private List<String> adjectives;
+  
+  /**
+   * A collection of nouns associated with this object
+   */
   private List<String> nouns;
+  
+  /**
+   * A collection of properties currently associated with the object (ex: "takable")
+   */
   private Set<String> properties;
+  
+  /**
+   * A responder associated with this game object.
+   */
   private Responder responder;
 
+  /**
+   * This constructor creates a game object using the given name. It initializes the
+   * description for this object to an empty string.
+   * @param name
+   */
   public GameObject(String name) {
     String id = this.generateIdFromName(name);
     String desc = "";
@@ -24,14 +56,9 @@ public class GameObject {
   }
 
   /**
-   * Constructs a game object with the specified display name and the specified description.
-   * Creates an object identifier that is the display name with underscores instead of spaces.
-   * If the display name consists of only one word, it becomes a noun and there are no adjectives.
-   * If the display name consists of more than one word, the last word becomes a noun and all
-   * others become adjectives.
-   * 
-   * @param name
-   * @param description
+   * This constructor creates a Game object from a name and a description
+   * @param name the name of the object
+   * @param description a short description of the object
    */
   public GameObject(String name, String description) {
     String id = this.generateIdFromName(name);
@@ -39,6 +66,12 @@ public class GameObject {
     responder = ( command -> new Response() );
   }
 
+  /**
+   * This method initializes all of the fields for this game object.
+   * @param id the unique id for this object
+   * @param description the description for this object
+   * @param displayName the display name of the object
+   */
   private void init(String id, String description, String displayName) {
     this.id = id;
     this.description = description;
@@ -51,7 +84,14 @@ public class GameObject {
 
   }
 
-  private String generateIdFromName(String name) {
+  /**
+   * This method generates
+   * @param name
+   * @return
+   */
+  private String generateIdFromName(String name) 
+  {
+	//Do we want to ensure that this is TRULY unique? We could append a UUID to the end of this string...
     return name.replaceAll("\\s+", "_");
   }
 
@@ -173,7 +213,7 @@ public class GameObject {
   public void addProperty(GameProperty...gameProperties) {
     for (GameProperty prop : gameProperties)
     {
-    	this.properties.add(prop.getPropId());
+    	this.addProperty(prop.getPropId());
     }
   }
 
@@ -181,8 +221,14 @@ public class GameObject {
    * Removes the specified property from the game object.
    * @param property
    */
-  public void removeProperty(String property) {
+  public void removeProperty(String property) 
+  {
     properties.remove(property);
+  }
+  
+  public void removeProperty(GameProperty property) 
+  {
+    properties.remove(property.getPropId());
   }
 
   /**
@@ -193,6 +239,10 @@ public class GameObject {
   public boolean containsProperty(String property) {
     return properties.contains(property);
   }
+  
+  public boolean containsProperty(GameProperty property) {
+	    return properties.contains(property.getPropId());
+	 }
   
   public void setResponder(Responder responder) {
     this.responder = responder;
