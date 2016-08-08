@@ -3,4 +3,5 @@
 .project
 *.xml
 *.iml
-/bin/
+bin/
+.idea/
