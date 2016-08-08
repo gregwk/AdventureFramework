@@ -1,8 +1,6 @@
 package adventure.util.tree;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -147,7 +145,6 @@ public class ListTree<K, V> implements Tree<K, V> {
         origPNode.children.remove(node);
         // reconnect to new parent
         Node pNode = map.get(parent);
-        node.parent = pNode.key;
         pNode.children.add(node);
     }
 
@@ -163,26 +160,7 @@ public class ListTree<K, V> implements Tree<K, V> {
         origPNode.children.remove(node);
         // reconnect to new parent
         Node pNode = map.get(parent);
-        node.parent = pNode.key;
         pNode.children.add(index, node);
     }
-
-	@Override
-	public List<V> getChildren(K key) {
-		if (!map.containsKey(key)) throw new IllegalArgumentException();
-		Node node = map.get(key);
-		List<V> children = new ArrayList<>();
-		Iterator<Node> iter = node.children.iterator();
-		while (iter.hasNext()){
-			children.add(iter.next().value);
-		}
-		return children;
-	}
-
-	@Override
-	public void clear() {
-		// TODO Auto-generated method stub
-		map.clear();
-	}
     
 }
