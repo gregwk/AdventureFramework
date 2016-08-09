@@ -87,7 +87,7 @@ public interface GameWorld {
   public void addProperty(String objectId, String prop);
   
   /**
-   * If the object contains the property.  
+   *  
    * 
    * @param objectId
    * @param prop
@@ -96,12 +96,68 @@ public interface GameWorld {
   public boolean containsProperty(String objectId, String prop);
   
   /**
-   * Removes the property from the object.  
+   * If the object contains the property.  
    * 
    * @param objectId
    * @param prop
    */
   public void removeProperty(String objectId, String prop);
+    /**
+   * Removes the property from the object.  
+   * 
+   * @param objectId
+   * @param prop
+   */
+  public List<String> getGameObjects(List<String> objectWords);
+  
+    /**
+   * get the GameObject from the a list of objectWords.  
+   * 
+   * @param objectId
+   * @param prop
+   */
+
+  public List<String> getActions(String verb);
+  
+    /**
+   * get a list of action string from s string of verb using gameDictionary.  
+   * 
+   * @param objectId
+   * @param prop
+   */
+
+  void addGameAction(GameAction action);
+  
+    /**
+   * add the GameAction to gameDictionary
+   * 
+   * @param objectId
+   * @param prop
+   */
+
+  void addDirection(Direction direction);
+    /**
+   * add the direction directly under the tree root
+   * 
+   * @param objectId
+   * @param prop
+   */
+
+  List<String> getChildren(String objectId);
+    /**
+   * get a list of childrenId from its parent id
+   * 
+   * @param objectId
+   * @param prop
+   */
+
+  String getParent(String objectId);
+    /**
+   * get an object's parent by its id
+   * 
+   * @param objectId
+   * @param prop
+   */
   
   public void clear();
   
