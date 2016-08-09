@@ -79,6 +79,9 @@ public class GameParser implements Parser {
     
     //3.Verify all the words exist
     verifyWordsDefined(wordTokens);
+    if (command.errorMessage != null) {
+	return command;
+    }
     
     //In this release we are assumming that direction will be
     //preceeded by verb 'go'

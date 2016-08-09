@@ -69,6 +69,12 @@ public class GwkParserTest {
 	assertNull(command.object2);
 	assertEquals(Message.parseEmptyMessage(), command.errorMessage);
     }
+
+    @Test
+    public void testUndefinedFirstWord() {
+	Command command = parser.parse("hello");
+	assertEquals(Message.parseUndefinedWordMessage("hello"), command.errorMessage);	
+    }
     
     @Test
     public void testUndefinedWord() {

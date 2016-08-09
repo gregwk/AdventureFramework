@@ -28,31 +28,64 @@ public class Game
 
   public void initialize() 
   {
-	  //Initialize rooms and connections
-	  Map<String, Room> rooms = initRooms(GARAGE_ID, KITCHEN_ID);
-	  Room kitchen = rooms.get(KITCHEN_ID);
-	  Room garage = rooms.get(GARAGE_ID);
-	  RoomConnector garageToKitchenConnection = new RoomConnector(garage, kitchen, "east", "west");
-	  initRoomDirections(rooms, garageToKitchenConnection);
-	  
-	  //Init Things in Garage
-	  Thing toolbox = addThingToModel("Toolbox", "A standard workman's toolbox", garage.getId());
-	  Thing key = addThingToModel("Key", "This rusty key might not be able to open anything", toolbox.getId());
-	  Door garageToKitchenDoor = new Door("Kitchen Door", "This door connects the kitchen and the garage.");
-	  
-	  //Add locked door between garage and kitchen
-	  garageToKitchenDoor.addProperty(GameProperty.LOCKED, GameProperty.LOCKABLE);
-	  garage.addDoor("east", garageToKitchenDoor);
-	  kitchen.addDoor("west", garageToKitchenDoor);
-	  
-	  //Set the properties of the objects in the game. The key needs to be concealed until the toolbox is opened.
-	  key.addProperty(GameProperty.TAKABLE, GameProperty.CONCEALED);
-	  toolbox.addProperty(GameProperty.CONTAINER, GameProperty.OPENABLE);
-	  
-	  //Initialize the player
-	  Actor player = new Player("Alex");
-	  player.setParent(garage.getId());
-	  this.world.setPlayer(player);
+
+      Room kitchen = new Room("kitchen");
+      kitchen.setDescription("You are in a small kitchen. There is an exit to the east.");
+      
+      Room garage = new Room("garage");
+      garage.setDescription("You are in a musty garage. There is an exit to the west.");
+
+      kitchen.addExit("east", garage);
+      garage.addExit("west", kitchen);
+      
+      world.addRoom(kitchen);
+      world.addRoom(garage);
+      
+      Thing toolbox = new Thing("toolbox");
+      toolbox.setDescription("A standard workman's toolbox.");
+      toolbox.setParent("garage");
+      toolbox.addProperty("container");
+      toolbox.addProperty("openable");
+      world.addThing(toolbox);
+
+      Thing key = new Thing("key");
+      key.setDescription("This rusty key might not be able to open anything.");
+      key.setParent("toolbox");
+      key.addProperty("takeable");
+      key.addProperty("concealed");
+      world.addThing(key);
+      
+      Player player = new Player("Alex");
+      player.setDescription("You look like Alex.");
+      player.setParent("kitchen");
+      world.addThing(player);
+      world.setPlayer(player);
+      
+//          //Initialize rooms and connections
+//	  Map<String, Room> rooms = initRooms(GARAGE_ID, KITCHEN_ID);
+//	  Room kitchen = rooms.get(KITCHEN_ID);
+//	  Room garage = rooms.get(GARAGE_ID);
+//	  RoomConnector garageToKitchenConnection = new RoomConnector(garage, kitchen, "east", "west");
+//	  initRoomDirections(rooms, garageToKitchenConnection);
+//	  
+//	  //Init Things in Garage
+//	  Thing toolbox = addThingToModel("Toolbox", "A standard workman's toolbox", garage.getId());
+//	  Thing key = addThingToModel("Key", "This rusty key might not be able to open anything", toolbox.getId());
+//	  Door garageToKitchenDoor = new Door("Kitchen Door", "This door connects the kitchen and the garage.");
+//	  
+//	  //Add locked door between garage and kitchen
+//	  garageToKitchenDoor.addProperty(GameProperty.LOCKED, GameProperty.LOCKABLE);
+//	  garage.addDoor("east", garageToKitchenDoor);
+//	  kitchen.addDoor("west", garageToKitchenDoor);
+//	  
+//	  //Set the properties of the objects in the game. The key needs to be concealed until the toolbox is opened.
+//	  key.addProperty(GameProperty.TAKABLE, GameProperty.CONCEALED);
+//	  toolbox.addProperty(GameProperty.CONTAINER, GameProperty.OPENABLE);
+//	  
+//	  //Initialize the player
+//	  Actor player = new Player("Alex");
+//	  player.setParent(garage.getId());
+//	  this.world.setPlayer(player);
   }
   
   /**

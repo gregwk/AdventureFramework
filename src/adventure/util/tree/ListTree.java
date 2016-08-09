@@ -203,4 +203,28 @@ public class ListTree<K, V> implements Tree<K, V> {
 		}
 		return children;
 	}
+
+	private int spaces = 0;
+	private int tab = 2;
+	
+	public String printHtmlKeyTree() {
+	    if (root == null) {
+		return "The Tree is Empty!";
+	    }
+	    return printHtmlKeySubtree(root.key, 0);
+	}
+
+	private String printHtmlKeySubtree(K key, int indent) {
+	    StringBuilder sb = new StringBuilder();
+	    for (int i = 0; i < indent; i++) {
+		sb.append("- ");
+	    }
+	    sb.append(key.toString());
+	    sb.append("<br>");
+	    Node node = map.get(key);
+	    for (Node n : node.children) {
+		sb.append(printHtmlKeySubtree(n.key, indent + tab));
+	    }
+	    return sb.toString();
+	}
 }

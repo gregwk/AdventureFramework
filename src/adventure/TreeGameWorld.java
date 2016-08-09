@@ -187,5 +187,9 @@ public class TreeGameWorld implements GameWorld {
 	public void addProperty(String objectId, String property) {
 		gameTree.get(objectId).addProperty(property);    
 	}
+	
+	public String printGameWorld() {
+	    return ((ListTree) gameTree).printHtmlKeyTree();
+	}
 
 }
