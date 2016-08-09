@@ -189,6 +189,7 @@ public class ListTree<K, V> implements Tree<K, V> {
 	public void clear() {
 		// TODO Auto-generated method stub
 		map.clear();
+		root = null;
 	}
 
 	@Override

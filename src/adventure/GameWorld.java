@@ -103,6 +103,8 @@ public interface GameWorld {
    */
   public void removeProperty(String objectId, String prop);
   
+  public void clear();
+  
 }
 
 

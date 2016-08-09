@@ -28,6 +28,7 @@ public class TreeGameWorld implements GameWorld {
 
 	private TreeGameWorld() {
 		gameTree = new ListTree<>();
+		gameTree.addRoot("root", new GameObject("gametreeroot"));
 		gameDic = GameDictionary.getInstance();
 	}
 
@@ -39,11 +40,8 @@ public class TreeGameWorld implements GameWorld {
 
 	@Override
 	public boolean isInScope(String objectId) {
-		boolean bInScope = this.gameTree.contains(objectId);
-		
-		// Some properties effect if it is in scope.
-		//...
-		return bInScope;
+	    if (!gameTree.contains(objectId)) throw new IllegalArgumentException();	    
+	    return isInInventory(objectId) || getRoom(objectId).equals(getRoom(player.getId()));
 	}
 
 	@Override
@@ -68,19 +66,26 @@ public class TreeGameWorld implements GameWorld {
 		if (player != null)
 			return;
 		player = actor;
-		addThing(player);
+		// addThing(player);
 	}
 
-	@Override
-	public Room getRoom(String objectId) {
-		// TODO Auto-generated method stub
-		String roomId = objectId;
-		while(!this.gameTree.isRoot(roomId)){
-			roomId = this.gameTree.parent(roomId);
-		}
-		
-		return (Room) this.gameTree.get(roomId);
+    @Override
+    public Room getRoom(String objectId) {
+
+	if (objectId.equals("root")) throw new IllegalArgumentException();
+	if (gameTree.get(objectId) instanceof Room) throw new IllegalArgumentException();
+	if (gameTree.get(objectId) instanceof Direction) throw new IllegalArgumentException();
+	
+	String temp = gameTree.parent(objectId);
+	GameObject result = gameTree.get(temp);
+
+	while (!(result instanceof Room)) {
+	    temp = gameTree.parent(temp);
+	    result = gameTree.get(temp);
 	}
+
+	return (Room) result;
+    }
 
 	@Override
 	public GameObject getGameObject(String objectId) {
@@ -98,15 +103,16 @@ public class TreeGameWorld implements GameWorld {
 	@Override
 	public void addRoom(Room room) {
 		// TODO Auto-generated method stub
-		gameTree.addRoot(room.getId(), room);
+		// gameTree.addRoot(room.getId(), room);
+	    	gameTree.addChild("root", room.getId(), room);
 		gameDic.addGameObject(room);
 	}
 
 //	@Override
-	public void addProperty(String objectId, GameProperty... props) {
-		// TODO Auto-generated method stub
-		gameTree.get(objectId).addProperty(props);
-	}
+//	public void addProperty(String objectId, String property) {
+//		// TODO Auto-generated method stub
+//		gameTree.get(objectId).addProperty(property);
+//	}
 
 	@Override
 	public boolean containsProperty(String objectId, String prop) {
@@ -149,6 +155,7 @@ public class TreeGameWorld implements GameWorld {
 		// TODO Auto-generated method stub
 		gameDic.clear();
 		gameTree.clear();
+		gameTree.addRoot("root", new GameObject("gametreeroot"));
 		player = null;
 	}
 
@@ -177,9 +184,8 @@ public class TreeGameWorld implements GameWorld {
 	}
 
 	@Override
-	public void addProperty(String objectId, String prop) {
-	    // TODO Auto-generated method stub
-	    
+	public void addProperty(String objectId, String property) {
+		gameTree.get(objectId).addProperty(property);    
 	}
 
 }

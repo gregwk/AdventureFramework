@@ -7,12 +7,12 @@ import org.junit.Test;
 
 public class GwkGameWorldTest {
 
-    GameWorld world;
+    GameWorld world = TreeGameWorld.getInstance();
 
     @Before
     public void setUp() throws Exception {
 
-	world = TreeGameWorld.getInstance();
+	world.clear();
 
 	Room kitchen = new Room("kitchen");
 	kitchen.setDescription("A small kitchen.");
@@ -24,7 +24,7 @@ public class GwkGameWorldTest {
 	world.addRoom(garage);
 
 	Actor player = new Actor("bob");
-	player.setDescription("Your name is Bob, and you are look very handsome today.");
+	player.setDescription("Your name is Bob, and you look very handsome today.");
 	player.setParent("kitchen");
 	player.addProperty("proper");
 	player.addProperty("male");
@@ -52,8 +52,8 @@ public class GwkGameWorldTest {
 	world.addThing(beachball);
 
 	Thing soccerball = new Thing("soccer ball");
-	beachball.setDescription("A soccer ball");
-	beachball.setParent("wooden_box");
+	soccerball.setDescription("A soccer ball");
+	soccerball.setParent("wooden_box");
 	world.addThing(soccerball);
     }
 
@@ -76,7 +76,7 @@ public class GwkGameWorldTest {
 
     @Test
     public void testMove() {
-	world.move("soccer_ball", "player");
+	world.move("soccer_ball", "bob");
 	Room newSoccerBallRoom = world.getRoom("soccer_ball");
 	assertTrue(world.isInInventory("soccer_ball"));
 	assertEquals("kitchen", newSoccerBallRoom.getId());
