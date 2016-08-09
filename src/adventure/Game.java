@@ -41,8 +41,18 @@ public class Game
       world.addRoom(kitchen);
       world.addRoom(garage);
       
+      Thing hammer = new Thing("hammer");
+      hammer.setDescription("The hammer has a bright orange handle.");
+      hammer.setParent("kitchen");
+      world.addThing(hammer);
+      
+      Thing screwdriver = new Thing("screwdriver");
+      screwdriver.setDescription("");
+      screwdriver.setParent("kitchen");
+      world.addThing(screwdriver);
+            
       Thing toolbox = new Thing("toolbox");
-      toolbox.setDescription("A standard workman's toolbox.");
+      toolbox.setDescription("");
       toolbox.setParent("garage");
       toolbox.addProperty("container");
       toolbox.addProperty("openable");

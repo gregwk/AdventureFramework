@@ -50,9 +50,8 @@ public class GameObject {
   public GameObject(String name) {
     String id = this.generateIdFromName(name);
     String desc = "";
-
     init(id, desc, name);
-
+    responder = ( command -> new Response() );
   }
 
   /**

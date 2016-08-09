@@ -78,7 +78,7 @@ public class DefaultAction
 
                     if(!objectIsInScope(world, gameObject))
                     {
-                        return new Response("message", "There is no such "+ command.object1);
+                        return new Response("message", "You don't see any "+ command.object1);
                     }
 
                     String description = gameObject.getDescription();
@@ -86,10 +86,10 @@ public class DefaultAction
 
                     if (description.isEmpty())
                     {
-                        return new Response("message", "");
+                        return new Response("message", "It's just an ordinary " + command.object1);
                     } else
                     {
-                        return new Response("message", "You are looking at "+ description);
+                        return new Response("message", description);
                     }
                 }
         );

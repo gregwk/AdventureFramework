@@ -87,7 +87,7 @@ public class GameParser implements Parser {
     //preceeded by verb 'go'
     // 4. If the first word is a verb fetch the corresponding actions
     if (dictionary.isVerb(wordTokens[0])) {
-      try {
+//      try {
         List<String> actionList = dictionary.getActions(wordTokens[0]);
         if (actionList == null || actionList.isEmpty()) {
           command.errorMessage = "Invalid action";
@@ -110,7 +110,11 @@ public class GameParser implements Parser {
                           if(obj1NounWords != null && obj1NounWords.length > 0){
                             command.object1 
                                         = disambiguateNounWords(obj1NounWords);
-                            if (!command.errorMessage.equals("")) {
+                            //DEBUG
+//                            if (command == null) System.out.println("command is null");
+//                            if (command.errorMessage == null) System.out.println("error message is null");
+                            
+                            if (command.errorMessage != null && !command.errorMessage.equals("")) {
                                 return command;
                             }
                           }
@@ -135,10 +139,10 @@ public class GameParser implements Parser {
                                             allPatterns.toArray(new String[0]));
           }
         }
-      } catch (Exception ex) {
-        // TODO: How should the exception when retriving patterns from dictionary be handled??
-        command.errorMessage = "System Exception: Error while retrieving patterns from dictionary";
-      }
+//      } catch (Exception ex) {
+//        // TODO: How should the exception when retriving patterns from dictionary be handled??
+//        command.errorMessage = "System Exception: Error while retrieving patterns from dictionary";
+//      }
     } else {
       // The set error that the first word is not verb   
         command.errorMessage = Message.parseUnknownVerbMessage(wordTokens[0]);
