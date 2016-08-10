@@ -44,11 +44,13 @@ public class Game
       Thing hammer = new Thing("hammer");
       hammer.setDescription("The hammer has a bright orange handle.");
       hammer.setParent("kitchen");
+      hammer.addProperty("takeable");
       world.addThing(hammer);
       
       Thing screwdriver = new Thing("screwdriver");
       screwdriver.setDescription("");
       screwdriver.setParent("kitchen");
+      screwdriver.addProperty("takeable");
       world.addThing(screwdriver);
             
       Thing toolbox = new Thing("toolbox");

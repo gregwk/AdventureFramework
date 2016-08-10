@@ -104,50 +104,34 @@ public class DefaultAction
      *  Take Game Action
      * */
 
-    private GameAction getTakeGameAction()
-    {
+    private GameAction getTakeGameAction() {
 
-        GameAction takeAction = new GameAction("take");
+	GameAction takeAction = new GameAction("take");
+	takeAction.addPattern("take {object}");
 
-        takeAction.addPattern("take {object}");
+	Responder responder = (command -> {
+	    Actor player = world.getPlayer();
+	    GameObject gameObject = world.getGameObject(command.object1);
 
-        Responder responder = (
-                command -> {
-                    Actor player = world.getPlayer();
+	    if (world.isInInventory(command.object1)) {
+		return new Response("message", "You already have the " + command.object1);
+	    }
 
-                    GameObject gameObject = world.getGameObject(command.object1);
+	    if (!objectIsInScope(world, gameObject)) {
+		return new Response("message", "You don't see any " + command.object1);
+	    }
 
+	    if (!gameObject.containsProperty("takeable")) {
+		return new Response("message", "The " + command.object1 + " is not something you can take.");
+	    }
 
-                    if(world.isInInventory(command.object1))
-                    {
-                        if (!objectIsInScope(world, gameObject))
-                        {
-                            return new Response("message", "There is no such "+ command.object1);
-                        }
+	    world.move(command.object1, player.getId());
+	    return new Response("message", "You have taken the " + command.object1);
 
-                        if(gameObject.containsProperty(GameProperty.TAKABLE.getPropId()))
-                        {
+	});
 
-                            world.move(command.object1, player.getId());
-                            return new Response("message", "you have taken " + gameObject.getDescription());
-
-                        }
-                        else
-                        {
-                            return new Response("message", "There is no such "+ command.object1);
-                        }
-                    }
-                    else
-                    {
-                        return new Response("message", "you don't have any such "+ command.object1);
-                    }
-                }
-        );
-
-        takeAction.setResponder(responder);
-
-
-        return takeAction;
+	takeAction.setResponder(responder);
+	return takeAction;
     }
 
 

@@ -86,6 +86,12 @@ public class GameParser implements Parser {
     //In this release we are assumming that direction will be
     //preceeded by verb 'go'
     // 4. If the first word is a verb fetch the corresponding actions
+    
+//    if (!dictionary.isVerb(wordTokens[0])) {
+//	command.errorMessage = Message.parseUnknownVerbMessage(wordTokens[0]);
+//	return command;
+//    }
+    
     if (dictionary.isVerb(wordTokens[0])) {
 //      try {
         List<String> actionList = dictionary.getActions(wordTokens[0]);
@@ -193,6 +199,7 @@ public class GameParser implements Parser {
    * @return 
    */
   private String disambiguateNounWords(String[] nounWords) {
+      
       String phrase = String.join(" ", nounWords);
       int wordCount = nounWords.length;
       //Can we assume if there are more than 1 words in the input nounWords
@@ -218,10 +225,11 @@ public class GameParser implements Parser {
       List<String> gameObjectIdList 
                         = dictionary.getGameObjects(Arrays.asList(nounWords));
       
+      // TODO fix this
       for(String gameObjectId: gameObjectIdList){          
-          if(gameWorld.isInScope(gameObjectId)){
+          // if(gameWorld.isInScope(gameObjectId)){
               return gameObjectId;
-          }
+          // }
       }
       
       command.errorMessage = Message.parseUnknownPhraseMessage(phrase);
