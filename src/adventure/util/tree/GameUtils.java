@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import adventure.Direction;
 import adventure.GameObject;
 import adventure.GameProperty;
 import adventure.GameWorld;
@@ -66,7 +67,7 @@ public class GameUtils
 		for (String childID : objChildren)
 		{
 			GameObject child = world.getGameObject(childID);
-			if (GameUtils.objectIsInScope(world, child))
+			if (GameUtils.objectIsInScope(world, child) && !(child instanceof Direction))
 			{
 				List<String> childsChildren = getAllObjectsContainedInObject(world, childID);
 				if (childsChildren != null)	
