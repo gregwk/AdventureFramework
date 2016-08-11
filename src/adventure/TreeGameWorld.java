@@ -159,7 +159,7 @@ public class TreeGameWorld implements GameWorld {
 		player = null;
 	}
 
-//	@Override
+	@Override
 	public List<String> getChildren(String objectId) {
 		// TODO Auto-generated method stub
 		List<GameObject> childrenGameObjects = gameTree.getChildren(objectId);
@@ -175,12 +175,6 @@ public class TreeGameWorld implements GameWorld {
 	public String getParent(String objectId) {
 		// TODO Auto-generated method stub
 		return gameTree.parent(objectId);
-	}
-
-	@Override
-	public List<GameObject> getChildrenOfGameObject(String objectId) {
-	    // TODO Auto-generated method stub
-	    return null;
 	}
 
 	@Override

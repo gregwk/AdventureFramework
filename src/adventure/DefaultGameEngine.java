@@ -1,6 +1,9 @@
 package adventure;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import adventure.util.tree.GameUtils;
 
 public final class DefaultGameEngine implements GameEngine {
 	
@@ -55,7 +58,7 @@ public final class DefaultGameEngine implements GameEngine {
 	Room currentRoom = world.getRoom(world.getPlayer().getId());
 	sb.append("<h1>" + currentRoom.getName() + "</h1>");
 	sb.append("<p>" + currentRoom.getDescription() + "</p>");
-	List<String> contents = ((TreeGameWorld) world).getChildren(currentRoom.getId());
+	List<String> contents = getAllContainedObjects(currentRoom.getId());
 	if (!contents.isEmpty()) {
 	    sb.append("<p>You see: ");
 	    for (String objectId : contents) {
@@ -66,7 +69,24 @@ public final class DefaultGameEngine implements GameEngine {
 	}
 	return sb.toString();
     }
-	
+    
+    private List<String> getAllContainedObjects(String parentID)
+    {
+    	List<String> allContainedObjects = new ArrayList<String>();
+    	List<String> objChildren = world.getChildren(parentID);
+		for (String childID : objChildren)
+		{
+			GameObject child = world.getGameObject(childID);
+			if (GameUtils.objectIsInScope(world, child))
+			{
+				List<String> childsChildren = getAllContainedObjects(childID);
+				if (childsChildren != null)	
+					allContainedObjects.addAll(childsChildren);
+				allContainedObjects.add(childID);
+			}
+		}
+		return allContainedObjects;
+    }
 	
 	public void run() {
         new AdventureGUI(engine).setVisible(true);
