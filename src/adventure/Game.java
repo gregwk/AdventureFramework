@@ -35,6 +35,9 @@ public class Game
 	  RoomConnector garageToKitchenConnection = new RoomConnector(garage, kitchen, "east", "west");
 	  initRoomDirections(rooms, garageToKitchenConnection);
 	  
+	  //Add object to kitchen so we know that it works
+	  Thing table = addThingToModel("table", "Looks like this table hasn't been eaten off of in years...", kitchen.getId());
+	  
 	  //Init toolbox with key
 	  Thing toolbox = addThingToModel("toolbox", "A standard workman's toolbox", garage.getId());
 	  Thing key = addThingToModel("key", "This rusty key might not be able to open anything", toolbox.getId());
