@@ -76,6 +76,8 @@ public interface GameWorld {
    */
   public void addRoom(Room room); 
   
+  public void addDirection(Direction direction);
+  
   /**
    * Adds the property to object. 
    * 

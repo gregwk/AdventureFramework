@@ -1,6 +1,8 @@
 package adventure.util.tree;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import adventure.GameObject;
 import adventure.GameProperty;
@@ -55,5 +57,23 @@ public class GameUtils
         }
 
         return isInScope;
+    }
+    
+    public static List<String> getAllObjectsContainedInObject(GameWorld world, String parentID)
+    {
+    	List<String> allContainedObjects = new ArrayList<String>();
+    	List<String> objChildren = world.getChildren(parentID);
+		for (String childID : objChildren)
+		{
+			GameObject child = world.getGameObject(childID);
+			if (GameUtils.objectIsInScope(world, child))
+			{
+				List<String> childsChildren = getAllObjectsContainedInObject(world, childID);
+				if (childsChildren != null)	
+					allContainedObjects.addAll(childsChildren);
+				allContainedObjects.add(childID);
+			}
+		}
+		return allContainedObjects;
     }
 }

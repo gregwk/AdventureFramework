@@ -63,6 +63,9 @@ public class Game
       player.setParent(garage.getId());
       world.addThing(player);
       world.setPlayer(player);
+      
+      world.addThing(new Thing("east"));
+	  world.addThing(new Thing("west"));
   }
   
   /**

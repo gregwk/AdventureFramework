@@ -250,5 +250,4 @@ public class GameObject {
   public Responder getResponder() {
     return responder;
   }
-
 }

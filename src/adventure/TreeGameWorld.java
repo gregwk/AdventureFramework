@@ -21,6 +21,7 @@ public class TreeGameWorld implements GameWorld {
 	private Tree<String, GameObject> gameTree;
 	private Dictionary gameDic;
 	private Actor player = null;
+	private GameObject root;
 
 	// singleton pattern
 
@@ -28,7 +29,8 @@ public class TreeGameWorld implements GameWorld {
 
 	private TreeGameWorld() {
 		gameTree = new ListTree<>();
-		gameTree.addRoot("root", new GameObject("gametreeroot"));
+		root = new GameObject("gametreeroot");
+		gameTree.addRoot("root", root);
 		gameDic = GameDictionary.getInstance();
 	}
 
@@ -184,6 +186,13 @@ public class TreeGameWorld implements GameWorld {
 	
 	public String printGameWorld() {
 	    return ((ListTree) gameTree).printHtmlKeyTree();
+	}
+
+	@Override
+	public void addDirection(Direction direction) {
+		gameTree.addChild(root.getId(), direction.getId(), direction);
+		gameDic.addGameObject(direction);
+		
 	}
 
 }

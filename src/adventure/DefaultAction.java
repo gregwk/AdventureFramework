@@ -18,6 +18,7 @@ public class DefaultAction
     private static final String TAKE = "take";
     private static final String GO = "go";
     private static final String EXAMINE = "examine";
+    private static final String LOOK = "look";
 
     public void initialize()
     {
@@ -25,12 +26,38 @@ public class DefaultAction
         grammar.addGameAction(getExamineAction());
         grammar.addGameAction(getTakeGameAction());
         grammar.addGameAction(getOpenGameAction());
+        grammar.addGameAction(getLookGameAction());
     }
 
     /**
      *  Go Action
      * */
+    private GameAction getLookGameAction() {
 
+        GameAction goAction = new GameAction(LOOK);
+        
+        goAction.addPattern(LOOK);
+
+
+          Responder responder = (
+                  command -> {
+                	  Actor player = world.getPlayer();
+                      Room room = world.getRoom(player.getId());
+                	  StringBuilder allObjectStr = new StringBuilder();
+                	  for (String id : GameUtils.getAllObjectsContainedInObject(world, room.getId()))
+                	  {
+                		  allObjectStr.append(" "+id);
+                	  }
+                	  return new Response("message", "Here are all the objets you can see: "+allObjectStr.toString());
+                  }
+          );
+
+          goAction.setResponder(responder);
+
+          return goAction;
+      }
+    
+    
   private GameAction getGoGameAction() {
 
     GameAction goAction = new GameAction("go");
