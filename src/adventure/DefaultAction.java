@@ -18,6 +18,7 @@ public class DefaultAction
     private static final String TAKE = "take";
     private static final String GO = "go";
     private static final String EXAMINE = "examine";
+    private static final String LOOK = "look";
 
     public void initialize()
     {
@@ -25,12 +26,38 @@ public class DefaultAction
         grammar.addGameAction(getExamineAction());
         grammar.addGameAction(getTakeGameAction());
         grammar.addGameAction(getOpenGameAction());
+        grammar.addGameAction(getLookGameAction());
     }
 
     /**
      *  Go Action
      * */
+    private GameAction getLookGameAction() {
 
+        GameAction goAction = new GameAction(LOOK);
+        
+        goAction.addPattern(LOOK);
+
+
+          Responder responder = (
+                  command -> {
+                	  Actor player = world.getPlayer();
+                      Room room = world.getRoom(player.getId());
+                	  StringBuilder allObjectStr = new StringBuilder();
+                	  for (String id : GameUtils.getAllObjectsContainedInObject(world, room.getId()))
+                	  {
+                		  allObjectStr.append(" "+id);
+                	  }
+                	  return new Response("message", "Here are all the objets you can see: "+allObjectStr.toString());
+                  }
+          );
+
+          goAction.setResponder(responder);
+
+          return goAction;
+      }
+    
+    
   private GameAction getGoGameAction() {
 
     GameAction goAction = new GameAction("go");
@@ -76,7 +103,7 @@ public class DefaultAction
 
                     GameObject gameObject = world.getGameObject(command.object1);
 
-                    if(!objectIsInScope(world, gameObject))
+                    if(!GameUtils.objectIsInScope(world, gameObject))
                     {
                         return new Response("message", "You don't see any "+ command.object1);
                     }
@@ -117,11 +144,11 @@ public class DefaultAction
 		return new Response("message", "You already have the " + command.object1);
 	    }
 
-	    if (!objectIsInScope(world, gameObject)) {
+	    if (!GameUtils.objectIsInScope(world, gameObject)) {
 		return new Response("message", "You don't see any " + command.object1);
 	    }
 
-	    if (!gameObject.containsProperty("takeable")) {
+	    if (!gameObject.containsProperty(GameProperty.TAKABLE)) {
 		return new Response("message", "The " + command.object1 + " is not something you can take.");
 	    }
 
@@ -158,7 +185,7 @@ public class DefaultAction
                         {
                             GameObject object1 = this.world.getGameObject(command.object1);
 
-                            if (objectIsInScope(world, object1))
+                            if (!GameUtils.objectIsInScope(world, object1))
                                 return getNotInScopeMessage(object1);
                             else if (!object1.containsProperty(GameProperty.OPENABLE.getPropId()))
                                 return new Response("message", object1.getName()+" is not openable");
@@ -169,8 +196,11 @@ public class DefaultAction
                                 //If this object has children, make all of them visible
                                 if (object1.containsProperty(GameProperty.CONTAINER.getPropId()))
                                 {
-                                    List<GameObject> children = world.getChildrenOfGameObject(object1.getId());
-                                    GameUtils.removePropertiesFromGameObjects(children, GameProperty.CONCEALED);
+                                    List<String> childrenIDs = world.getChildren(object1.getId());
+                                    for (String childID : childrenIDs)
+                                    {
+                                    	world.getGameObject(childID).removeProperty(GameProperty.CONCEALED);
+                                    }
                                 }
 
                                 //Mark the container as opened
@@ -187,31 +217,4 @@ public class DefaultAction
     {
         return new Response("message", object.getName()+" not in scope");
     }
-
-    /**
-     * An object is considered "in scope" if it is in the current room of the player AND
-     * it is not marked as "concealed".
-     * @param world
-     * @param object
-     * @return
-     */
-    private boolean objectIsInScope(GameWorld world, GameObject object)
-    {
-        boolean isInScope = true;
-
-        if (world.isInScope(object.getId()))
-        {
-            if(object.containsProperty(GameProperty.CONCEALED.getPropId())) // is object hidden
-            {
-                isInScope = false;
-            }
-        }
-        else
-        {
-            isInScope = false;
-        }
-
-        return isInScope;
-    }
-
 }

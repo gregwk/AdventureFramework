@@ -1,7 +1,9 @@
 package adventure;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class Room extends GameObject {
   
@@ -54,6 +56,11 @@ public class Room extends GameObject {
   public Door getDoor(String doorID)
   {
 	  return this.doors.get(doorID);
+  }
+
+  public Set<String> getAllExitIds()
+  {
+	  return this.exits.keySet();
   }
 
 }

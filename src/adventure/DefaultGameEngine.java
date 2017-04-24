@@ -1,6 +1,9 @@
 package adventure;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import adventure.util.tree.GameUtils;
 
 public final class DefaultGameEngine implements GameEngine {
 	
@@ -55,7 +58,7 @@ public final class DefaultGameEngine implements GameEngine {
 	Room currentRoom = world.getRoom(world.getPlayer().getId());
 	sb.append("<h1>" + currentRoom.getName() + "</h1>");
 	sb.append("<p>" + currentRoom.getDescription() + "</p>");
-	List<String> contents = ((TreeGameWorld) world).getChildren(currentRoom.getId());
+	List<String> contents = GameUtils.getAllObjectsContainedInObject(world, currentRoom.getId());
 	if (!contents.isEmpty()) {
 	    sb.append("<p>You see: ");
 	    for (String objectId : contents) {
@@ -63,10 +66,13 @@ public final class DefaultGameEngine implements GameEngine {
 		sb.append(" ");
 	    }
 	    sb.append("</p>");
+	    
+	 sb.append("Exits are "+currentRoom.getAllExitIds());
 	}
 	return sb.toString();
     }
-	
+    
+    
 	
 	public void run() {
         new AdventureGUI(engine).setVisible(true);

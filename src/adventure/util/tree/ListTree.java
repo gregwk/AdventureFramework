@@ -48,7 +48,8 @@ public class ListTree<K, V> implements Tree<K, V> {
 
     @Override
     public void addChild(K parent, K key, V value) {
-        if (!map.containsKey(parent)) throw new IllegalArgumentException();
+    	if (!map.containsKey(parent))
+    		parent = this.root.key;
         if (map.containsKey(key)) throw new IllegalArgumentException();
         if (key == null) throw new IllegalArgumentException();
         if (value == null) throw new IllegalArgumentException();

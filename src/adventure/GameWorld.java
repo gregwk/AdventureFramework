@@ -62,8 +62,6 @@ public interface GameWorld {
    */
   public GameObject getGameObject(String objectId);
   
-  public List<GameObject> getChildrenOfGameObject(String objectId);
-  
   /**
    * Adds the specified Thing to the game world.
    * 
@@ -77,6 +75,8 @@ public interface GameWorld {
    * @param obj
    */
   public void addRoom(Room room); 
+  
+  public void addDirection(Direction direction);
   
   /**
    * Adds the property to object. 
@@ -104,6 +104,8 @@ public interface GameWorld {
   public void removeProperty(String objectId, String prop);
   
   public void clear();
+
+  public List<String> getChildren(String objectId);
   
 }
 

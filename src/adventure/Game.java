@@ -27,77 +27,48 @@ public class Game
   public Game() {}
 
   public void initialize() 
-  {
-
-      Room kitchen = new Room("kitchen");
-      kitchen.setDescription("You are in a small kitchen. There is an exit to the east.");
-      
-      Room garage = new Room("garage");
-      garage.setDescription("You are in a musty garage. There is an exit to the west.");
-
-      kitchen.addExit("east", garage);
-      garage.addExit("west", kitchen);
-      
-      world.addRoom(kitchen);
-      world.addRoom(garage);
-      
-      Thing hammer = new Thing("hammer");
-      hammer.setDescription("The hammer has a bright orange handle.");
-      hammer.setParent("kitchen");
-      hammer.addProperty("takeable");
-      world.addThing(hammer);
-      
-      Thing screwdriver = new Thing("screwdriver");
-      screwdriver.setDescription("");
-      screwdriver.setParent("kitchen");
-      screwdriver.addProperty("takeable");
-      world.addThing(screwdriver);
-            
-      Thing toolbox = new Thing("toolbox");
-      toolbox.setDescription("");
-      toolbox.setParent("garage");
-      toolbox.addProperty("container");
-      toolbox.addProperty("openable");
-      world.addThing(toolbox);
-
-      Thing key = new Thing("key");
-      key.setDescription("This rusty key might not be able to open anything.");
-      key.setParent("toolbox");
-      key.addProperty("takeable");
-      key.addProperty("concealed");
-      world.addThing(key);
-      
-      Player player = new Player("Alex");
+  {   
+      //Initialize rooms and connections
+	  Map<String, Room> rooms = initRooms(GARAGE_ID, KITCHEN_ID);
+	  Room kitchen = rooms.get(KITCHEN_ID);
+	  Room garage = rooms.get(GARAGE_ID);
+	  RoomConnector garageToKitchenConnection = new RoomConnector(garage, kitchen, "east", "west");
+	  initRoomDirections(rooms, garageToKitchenConnection);
+	  
+	  //Add object to kitchen so we know that it works
+	  Thing table = addThingToModel("table", "Looks like this table hasn't been eaten off of in years...", kitchen.getId());
+	  
+	  //Init toolbox with key
+	  Thing toolbox = addThingToModel("toolbox", "A standard workman's toolbox", garage.getId());
+	  Thing key = addThingToModel("key", "This rusty key might not be able to open anything", toolbox.getId());
+	  Door garageToKitchenDoor = new Door("kitchen door", "This door connects the kitchen and the garage.");
+	  
+	  //Init container with jar with diamond (test multi level nesting)
+	  Thing container = addThingToModel("container", "A large metal container", garage.getId());
+	  Thing glass_jar = addThingToModel("glass jar", "A smaller glass jar", container.getId());
+	  Thing diamond = addThingToModel("diamond", "A sparkling diamond", glass_jar.getId());
+	  
+	  //Add locked door between garage and kitchen
+	  garageToKitchenDoor.addProperty(GameProperty.LOCKED, GameProperty.LOCKABLE);
+	  garage.addDoor("east", garageToKitchenDoor);
+	  kitchen.addDoor("west", garageToKitchenDoor);
+	  
+	  //Set the properties of the objects in the game. The key needs to be concealed until the toolbox is opened.
+	  key.addProperty(GameProperty.TAKABLE, GameProperty.CONCEALED);
+	  toolbox.addProperty(GameProperty.CONTAINER, GameProperty.OPENABLE);
+	  container.addProperty(GameProperty.CONTAINER, GameProperty.OPENABLE);
+	  glass_jar.addProperty(GameProperty.CONTAINER, GameProperty.CONCEALED, GameProperty.OPENABLE);
+	  diamond.addProperty(GameProperty.CONCEALED, GameProperty.TAKABLE);
+	  
+	  //Initialize the player
+	  Player player = new Player("Alex");
       player.setDescription("You look like Alex.");
-      player.setParent("kitchen");
+      player.setParent(garage.getId());
       world.addThing(player);
       world.setPlayer(player);
       
-//          //Initialize rooms and connections
-//	  Map<String, Room> rooms = initRooms(GARAGE_ID, KITCHEN_ID);
-//	  Room kitchen = rooms.get(KITCHEN_ID);
-//	  Room garage = rooms.get(GARAGE_ID);
-//	  RoomConnector garageToKitchenConnection = new RoomConnector(garage, kitchen, "east", "west");
-//	  initRoomDirections(rooms, garageToKitchenConnection);
-//	  
-//	  //Init Things in Garage
-//	  Thing toolbox = addThingToModel("Toolbox", "A standard workman's toolbox", garage.getId());
-//	  Thing key = addThingToModel("Key", "This rusty key might not be able to open anything", toolbox.getId());
-//	  Door garageToKitchenDoor = new Door("Kitchen Door", "This door connects the kitchen and the garage.");
-//	  
-//	  //Add locked door between garage and kitchen
-//	  garageToKitchenDoor.addProperty(GameProperty.LOCKED, GameProperty.LOCKABLE);
-//	  garage.addDoor("east", garageToKitchenDoor);
-//	  kitchen.addDoor("west", garageToKitchenDoor);
-//	  
-//	  //Set the properties of the objects in the game. The key needs to be concealed until the toolbox is opened.
-//	  key.addProperty(GameProperty.TAKABLE, GameProperty.CONCEALED);
-//	  toolbox.addProperty(GameProperty.CONTAINER, GameProperty.OPENABLE);
-//	  
-//	  //Initialize the player
-//	  Actor player = new Player("Alex");
-//	  player.setParent(garage.getId());
-//	  this.world.setPlayer(player);
+      world.addThing(new Thing("east"));
+	  world.addThing(new Thing("west"));
   }
   
   /**
